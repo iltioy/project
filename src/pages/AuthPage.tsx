@@ -1,17 +1,52 @@
-import { Button, FormLabel, Link, Stack, TextField, Typography } from "@mui/material";
+import {
+    Button,
+    FormLabel,
+    Link,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
-import CodeEntry from "../components/CodeEntry";
-import ReactCodeInput from "react-code-input";
+import * as yup from "yup";
+import { useFormik } from "formik";
 import OtpInput from "react-otp-input";
 interface LoginFormProps {
     setPage: React.Dispatch<React.SetStateAction<string>>;
 }
 
+const loginValidationSchema = yup.object({
+    email: yup
+        .string()
+        .email("Введите адрес электронной почты")
+        .required("Введите адрес электронной почты"),
+    password: yup
+        .string()
+        .min(8, "Пароль должен содержать минимум 8 символов")
+        .required("Введите пароль"),
+});
+
 const LoginForm = ({ setPage }: LoginFormProps) => {
+    const loginFormik = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
+        },
+        validationSchema: loginValidationSchema,
+        // validateOnChange: false,
+        // validateOnBlur: false,
+        onSubmit: (values) => {
+            alert(JSON.stringify(values));
+        },
+    });
+
+    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    // };
+
     return (
         <>
-            <form action="">
+            <form action="" onSubmit={loginFormik.handleSubmit}>
                 <FormLabel htmlFor="email">Введите почту:</FormLabel>
                 <TextField
                     placeholder="Почта"
@@ -24,6 +59,15 @@ const LoginForm = ({ setPage }: LoginFormProps) => {
                     }}
                     fullWidth
                     variant="outlined"
+                    value={loginFormik.values.email}
+                    onChange={loginFormik.handleChange}
+                    error={
+                        loginFormik.touched.email &&
+                        Boolean(loginFormik.errors.email)
+                    }
+                    helperText={
+                        loginFormik.touched.email && loginFormik.errors.email
+                    }
                 />
 
                 <FormLabel htmlFor="password">Введите пароль:</FormLabel>
@@ -35,6 +79,16 @@ const LoginForm = ({ setPage }: LoginFormProps) => {
                     fullWidth
                     sx={{ marginBottom: "25px", marginTop: "5px" }}
                     variant="outlined"
+                    value={loginFormik.values.password}
+                    onChange={loginFormik.handleChange}
+                    error={
+                        loginFormik.touched.password &&
+                        Boolean(loginFormik.errors.password)
+                    }
+                    helperText={
+                        loginFormik.touched.password &&
+                        loginFormik.errors.password
+                    }
                 />
 
                 <Button type="submit" variant="contained">
@@ -55,14 +109,42 @@ const LoginForm = ({ setPage }: LoginFormProps) => {
     );
 };
 
+const registerValidationSchema = yup.object({
+    email: yup
+        .string()
+        .email("Введите адрес электронной почты")
+        .required("Введите адрес электронной почты"),
+    password: yup
+        .string()
+        .min(8, "Пароль должен содержать минимум 8 символов")
+        .required("Введите пароль"),
+    confirmationPassword: yup
+        .string()
+        .oneOf([yup.ref("password")], "Пароли должны совпадать")
+        .required("Введите пароль ещё раз"),
+});
+
 interface RegisterFormProps {
     setPage: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const RegisterForm = ({ setPage }: RegisterFormProps) => {
+    const registerFormik = useFormik({
+        initialValues: {
+            email: "",
+            password: "",
+            confirmationPassword: "",
+        },
+        validationSchema: registerValidationSchema,
+        onSubmit: (values) => {
+            console.log("first");
+            setPage("confirmEmail");
+        },
+    });
+
     return (
         <>
-            <form action="">
+            <form action="" onSubmit={registerFormik.handleSubmit}>
                 <FormLabel htmlFor="email">Введите почту:</FormLabel>
                 <TextField
                     id="email"
@@ -74,6 +156,16 @@ const RegisterForm = ({ setPage }: RegisterFormProps) => {
                         marginTop: "5px",
                     }}
                     fullWidth
+                    value={registerFormik.values.email}
+                    onChange={registerFormik.handleChange}
+                    error={
+                        registerFormik.touched.email &&
+                        Boolean(registerFormik.errors.email)
+                    }
+                    helperText={
+                        registerFormik.touched.email &&
+                        registerFormik.errors.email
+                    }
                 />
 
                 <FormLabel htmlFor="password">Введите пароль:</FormLabel>
@@ -87,12 +179,32 @@ const RegisterForm = ({ setPage }: RegisterFormProps) => {
                         marginBottom: "10px",
                         marginTop: "5px",
                     }}
+                    value={registerFormik.values.password}
+                    onChange={registerFormik.handleChange}
+                    error={
+                        registerFormik.touched.password &&
+                        Boolean(registerFormik.errors.password)
+                    }
+                    helperText={
+                        registerFormik.touched.password &&
+                        registerFormik.errors.password
+                    }
                 />
                 <TextField
                     type="password"
-                    name="confPassword"
+                    name="confirmationPassword"
                     placeholder="Подтверждение пароля"
                     fullWidth
+                    value={registerFormik.values.confirmationPassword}
+                    onChange={registerFormik.handleChange}
+                    error={
+                        registerFormik.touched.confirmationPassword &&
+                        Boolean(registerFormik.errors.confirmationPassword)
+                    }
+                    helperText={
+                        registerFormik.touched.confirmationPassword &&
+                        registerFormik.errors.confirmationPassword
+                    }
                 />
 
                 <LoadingButton
@@ -101,10 +213,8 @@ const RegisterForm = ({ setPage }: RegisterFormProps) => {
                         marginTop: "20px",
                     }}
                     // loading
-                    onClick={() => {
-                        console.log("first");
-                        setPage("confirmEmail");
-                    }}
+
+                    type="submit"
                 >
                     Продолжить
                 </LoadingButton>
@@ -130,7 +240,14 @@ interface ConfirmEmailProps {
 const ConfirmEmail = ({ setPage }: ConfirmEmailProps) => {
     const [otp, setOtp] = useState("");
 
-    console.log(otp);
+    const handleOtpChange = (info: string) => {
+        setOtp(info);
+
+        if (info.length === 6) {
+            // make request to server and navigate if correct, otherwise show an error
+            console.log("six!");
+        }
+    };
 
     return (
         <Stack flexDirection="column">
@@ -141,13 +258,12 @@ const ConfirmEmail = ({ setPage }: ConfirmEmailProps) => {
                 }}
                 color="text.primary"
             >
-                На почту $email был выслан код подтверждения, введите его в поле ниже:
+                На почту $email был выслан код подтверждения, введите его в поле
+                ниже:
             </Typography>
-            {/* <CodeEntry numberOfCells={6} /> */}
-            {/* <ReactCodeInput type="number" inputMode="numeric" name="asdklasdlas" fields={6} /> */}
             <OtpInput
                 value={otp}
-                onChange={setOtp}
+                onChange={(info) => handleOtpChange(info)}
                 numInputs={6}
                 containerStyle={{
                     display: "flex",
