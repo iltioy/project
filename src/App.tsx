@@ -1,26 +1,56 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import AuthPage from "./pages/AuthPage";
+import { Routes, Route } from "react-router-dom";
+
+const dark = false;
+const darkTheme = createTheme({
+    palette: {
+        mode: "dark",
+        custom: {
+            primary: {
+                main: "#F54B64",
+                secondary: "#F78361",
+            },
+            secondary: "#242A38",
+            bg: {
+                main: "#121212",
+                secondary: "#181818",
+            },
+            main: "#121212",
+        },
+
+        // primary: {
+        //     main: "#F78361",
+        // },
+    },
+});
+
+const lightTheme = createTheme({
+    palette: {
+        mode: "light",
+        custom: {
+            primary: {
+                main: "#F54B64",
+                secondary: "#F78361",
+            },
+            secondary: "#242A38",
+            bg: {
+                main: "#E7EBF0",
+                secondary: "#ffffff",
+            },
+            main: "#ffffff",
+        },
+    },
+});
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <ThemeProvider theme={lightTheme}>
+            <Routes>
+                <Route path="" element={<AuthPage />} />
+            </Routes>
+        </ThemeProvider>
+    );
 }
 
 export default App;
