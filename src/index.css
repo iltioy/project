@@ -41,7 +41,9 @@ code {
     border-radius: 5px;
     margin-left: 3px;
     margin-right: 3px;
-    /* 
+}
+
+.dark {
     background: #121212;
-    color: #ffffff; */
+    color: #ffffff;
 }
