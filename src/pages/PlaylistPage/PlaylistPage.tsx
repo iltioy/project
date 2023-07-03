@@ -1,4 +1,11 @@
-import { Divider, Grid, Stack, ToggleButton, Typography } from "@mui/material";
+import {
+    Grid,
+    Stack,
+    IconButton,
+    Typography,
+    Menu,
+    MenuItem,
+} from "@mui/material";
 import { Params, useParams } from "react-router";
 import { faker } from "@faker-js/faker";
 import { Box } from "@mui/system";
@@ -7,6 +14,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 import "./playlistPage.styles.css";
+import { useState } from "react";
 
 interface SongType {
     id: string;
@@ -53,8 +61,20 @@ for (let i = 0; i < 5; i++) {
 const PlaylistPage = () => {
     const params = useParams<Params>();
 
-    console.log(params);
-    console.log(data);
+    const [songSettingsAnchorElement, setSongSettingsAnchorElement] =
+        useState<null | HTMLElement>(null);
+
+    let isSongSettingOpen = Boolean(songSettingsAnchorElement);
+
+    const handleOpenSongSettings = (
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) => {
+        setSongSettingsAnchorElement(e.currentTarget);
+    };
+
+    const handleCloseSongSettings = () => {
+        setSongSettingsAnchorElement(null);
+    };
 
     return (
         <Stack height="100%">
@@ -246,15 +266,40 @@ const PlaylistPage = () => {
                                             display="flex"
                                             alignItems="center"
                                         >
-                                            <FavoriteBorderIcon />
-                                            <MoreVertIcon
+                                            <IconButton>
+                                                <FavoriteBorderIcon />
+                                            </IconButton>
+
+                                            <IconButton
                                                 sx={{
                                                     marginLeft: "15px",
                                                 }}
-                                            />
+                                                onClick={(e) =>
+                                                    handleOpenSongSettings(e)
+                                                }
+                                            >
+                                                <MoreVertIcon />
+                                            </IconButton>
                                         </Box>
                                     </Grid>
                                 </Grid>
+
+                                <Menu
+                                    open={isSongSettingOpen}
+                                    anchorEl={songSettingsAnchorElement}
+                                    onClose={handleCloseSongSettings}
+                                    anchorOrigin={{
+                                        horizontal: "center",
+                                        vertical: "bottom",
+                                    }}
+                                    transformOrigin={{
+                                        horizontal: "center",
+                                        vertical: "top",
+                                    }}
+                                >
+                                    <MenuItem>Скачать</MenuItem>
+                                    <MenuItem>Экспорт</MenuItem>
+                                </Menu>
                             </Stack>
                         );
                     })}
