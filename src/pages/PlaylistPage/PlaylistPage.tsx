@@ -6,6 +6,8 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
+import "./playlistPage.styles.css";
+
 interface SongType {
     id: string;
     title: string;
@@ -13,6 +15,28 @@ interface SongType {
     album: string;
     imageURL: string;
 }
+
+interface PlaylistInfo {
+    username: string;
+    imageURL: string;
+    title: string;
+    info: PlaylistAdditionalInfo;
+}
+
+interface PlaylistAdditionalInfo {
+    numberOfSongs: number;
+    numberOfListens: number;
+}
+
+let playlist: PlaylistInfo = {
+    imageURL: faker.image.url(),
+    title: faker.lorem.words(),
+    username: faker.person.fullName(),
+    info: {
+        numberOfListens: 100,
+        numberOfSongs: 199,
+    },
+};
 
 let data: SongType[] = [];
 
@@ -33,15 +57,73 @@ const PlaylistPage = () => {
     console.log(data);
 
     return (
-        <Stack>
+        <Stack height="100%">
             <Stack
                 sx={{
                     width: "100%",
-                    height: "300px",
+                    height: {
+                        xs: "200px",
+                        md: "300px",
+                    },
                     background: "pink",
+                    alignItems: "center",
+                    overflow: "hidden",
                 }}
             >
-                Playlist Header
+                <Stack
+                    sx={{
+                        width: {
+                            xs: "95%",
+                            sm: "80%",
+                        },
+                        height: "100%",
+                    }}
+                    flexDirection="row"
+                >
+                    <img
+                        src={playlist.imageURL}
+                        alt=""
+                        className="playlistImage"
+                    />
+
+                    <Stack
+                        flexDirection="column"
+                        marginLeft="15px"
+                        sx={{
+                            marginTop: {
+                                xs: "37.5px",
+                                md: "50px",
+                            },
+                            overflow: "hidden",
+                        }}
+                    >
+                        <Typography
+                            variant="h4"
+                            sx={{
+                                fontWeight: "bold",
+                                fontSize: {
+                                    xs: "20px",
+                                    md: "40px",
+                                },
+                            }}
+                            // color="text.primary"
+                        >
+                            {playlist.title}
+                        </Typography>
+                        <Typography
+                            variant="caption"
+                            sx={{
+                                fontSize: {
+                                    xs: "17px",
+                                    md: "25px",
+                                },
+                            }}
+                            // color="text.primary"
+                        >
+                            {playlist.username}
+                        </Typography>
+                    </Stack>
+                </Stack>
             </Stack>
 
             <Stack
@@ -50,7 +132,10 @@ const PlaylistPage = () => {
                     paddingY: "50px",
                     display: "flex",
                     alignItems: "center",
+                    flex: 1,
                 }}
+                bgcolor="custom.bg.main"
+                color="text.primary"
             >
                 <Stack
                     sx={{
@@ -69,7 +154,11 @@ const PlaylistPage = () => {
                         <Grid item xs={12} md={6}>
                             Название
                         </Grid>
-                        <Grid item md="auto" display={{ xs: "none", md: "block" }}>
+                        <Grid
+                            item
+                            md="auto"
+                            display={{ xs: "none", md: "block" }}
+                        >
                             Альбом
                         </Grid>
                     </Grid>
@@ -77,6 +166,7 @@ const PlaylistPage = () => {
                     {data.map((song: SongType) => {
                         return (
                             <Stack
+                                bgcolor="custom.bg.secondary"
                                 sx={{
                                     border: "1px solid grey",
                                     height: "74px",
@@ -117,15 +207,23 @@ const PlaylistPage = () => {
                                             }}
                                         >
                                             {song.title.slice(0, 30)}
-                                            {song.title.length > 30 ? "..." : ""}
+                                            {song.title.length > 30
+                                                ? "..."
+                                                : ""}
                                         </Typography>
-                                        <Typography variant="caption" color="text.secondary">
+                                        <Typography
+                                            variant="caption"
+                                            color="text.secondary"
+                                        >
                                             {song.author}
                                         </Typography>
                                     </Grid>
                                     <Grid
                                         md={2}
-                                        display={{ xs: "none", md: "block" }}
+                                        display={{
+                                            xs: "none",
+                                            md: "block",
+                                        }}
                                         overflow="hidden"
                                         paddingRight="10px"
                                         item
@@ -138,9 +236,16 @@ const PlaylistPage = () => {
                                         md="auto"
                                         marginLeft="auto"
                                         marginRight="20px"
-                                        display={{ xs: "none", sm: "block" }}
+                                        display={{
+                                            xs: "none",
+                                            sm: "block",
+                                        }}
                                     >
-                                        <Box height="100%" display="flex" alignItems="center">
+                                        <Box
+                                            height="100%"
+                                            display="flex"
+                                            alignItems="center"
+                                        >
                                             <FavoriteBorderIcon />
                                             <MoreVertIcon
                                                 sx={{

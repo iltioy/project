@@ -49,7 +49,10 @@ function App() {
         <ThemeProvider theme={lightTheme}>
             <Routes>
                 <Route path="" element={<AuthPage />} />
-                <Route path="/:userName/palylist/:playlistName" element={<PlaylistPage />} />
+                <Route
+                    path="/:userName/playlist/:playlistName"
+                    element={<PlaylistPage />}
+                />
             </Routes>
         </ThemeProvider>
     );
