@@ -1,17 +1,11 @@
-import {
-    Grid,
-    Stack,
-    IconButton,
-    Typography,
-    Menu,
-    MenuItem,
-} from "@mui/material";
+import { Grid, Stack, IconButton, Box, Typography, Menu, MenuItem } from "@mui/material";
 import { Params, useParams } from "react-router";
 import { faker } from "@faker-js/faker";
-import { Box } from "@mui/system";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { useTheme } from "@mui/material/styles";
 
 import "./playlistPage.styles.css";
 import { useState } from "react";
@@ -48,7 +42,7 @@ let playlist: PlaylistInfo = {
 
 let data: SongType[] = [];
 
-for (let i = 0; i < 5; i++) {
+for (let i = 0; i < 50; i++) {
     data.push({
         id: faker.string.uuid(),
         album: faker.music.genre(),
@@ -60,15 +54,15 @@ for (let i = 0; i < 5; i++) {
 
 const PlaylistPage = () => {
     const params = useParams<Params>();
+    const theme = useTheme();
 
-    const [songSettingsAnchorElement, setSongSettingsAnchorElement] =
-        useState<null | HTMLElement>(null);
+    const [songSettingsAnchorElement, setSongSettingsAnchorElement] = useState<null | HTMLElement>(
+        null
+    );
 
     let isSongSettingOpen = Boolean(songSettingsAnchorElement);
 
-    const handleOpenSongSettings = (
-        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    ) => {
+    const handleOpenSongSettings = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         setSongSettingsAnchorElement(e.currentTarget);
     };
 
@@ -76,20 +70,41 @@ const PlaylistPage = () => {
         setSongSettingsAnchorElement(null);
     };
 
+    const [playlistSettingsAnchorElement, setPlaylistSettingsAnchorElement] =
+        useState<null | HTMLElement>(null);
+
+    let isPlaylistSettingOpen = Boolean(playlistSettingsAnchorElement);
+
+    const handleOpenPlaylistSettings = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        setPlaylistSettingsAnchorElement(e.currentTarget);
+    };
+
+    const handleClosePlaylistSettings = () => {
+        setPlaylistSettingsAnchorElement(null);
+    };
+
     return (
-        <Stack height="100%">
+        <Stack height="100%" flexDirection="column">
             <Stack
                 sx={{
                     width: "100%",
-                    height: {
-                        xs: "200px",
-                        md: "300px",
-                    },
-                    background: "pink",
                     alignItems: "center",
-                    overflow: "hidden",
+                    position: "relative",
                 }}
             >
+                <Stack
+                    sx={{
+                        position: "absolute",
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        bottom: 0,
+                        zIndex: 1,
+                        background: `url(${playlist.imageURL}) no-repeat center center fixed`,
+                        backgroundSize: "cover",
+                        filter: "blur(10px)",
+                    }}
+                />
                 <Stack
                     sx={{
                         width: {
@@ -97,18 +112,15 @@ const PlaylistPage = () => {
                             sm: "80%",
                         },
                         height: "100%",
+                        zIndex: 100,
                     }}
                     flexDirection="row"
                 >
-                    <img
-                        src={playlist.imageURL}
-                        alt=""
-                        className="playlistImage"
-                    />
+                    <img src={playlist.imageURL} alt="" className="playlistImage" />
 
                     <Stack
                         flexDirection="column"
-                        marginLeft="15px"
+                        paddingLeft="15px"
                         sx={{
                             marginTop: {
                                 xs: "37.5px",
@@ -125,8 +137,12 @@ const PlaylistPage = () => {
                                     xs: "20px",
                                     md: "40px",
                                 },
+                                // textShadow: "-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white",
+                                textShadow: `1px 1px 10px ${
+                                    theme.palette.mode === "dark" ? "black" : "white"
+                                }`,
                             }}
-                            // color="text.primary"
+                            color="text.primary"
                         >
                             {playlist.title}
                         </Typography>
@@ -137,11 +153,23 @@ const PlaylistPage = () => {
                                     xs: "17px",
                                     md: "25px",
                                 },
+                                textShadow: `1px 1px 10px ${
+                                    theme.palette.mode === "dark" ? "black" : "white"
+                                }`,
                             }}
-                            // color="text.primary"
+                            color="text.primary"
                         >
                             {playlist.username}
                         </Typography>
+
+                        <Box>
+                            <IconButton>
+                                <FavoriteBorderIcon color="warning" />
+                            </IconButton>
+                            <IconButton onClick={handleOpenPlaylistSettings}>
+                                <MoreHorizIcon color="warning" />
+                            </IconButton>
+                        </Box>
                     </Stack>
                 </Stack>
             </Stack>
@@ -152,7 +180,6 @@ const PlaylistPage = () => {
                     paddingY: "50px",
                     display: "flex",
                     alignItems: "center",
-                    flex: 1,
                 }}
                 bgcolor="custom.bg.main"
                 color="text.primary"
@@ -174,11 +201,7 @@ const PlaylistPage = () => {
                         <Grid item xs={12} md={6}>
                             Название
                         </Grid>
-                        <Grid
-                            item
-                            md="auto"
-                            display={{ xs: "none", md: "block" }}
-                        >
+                        <Grid item md="auto" display={{ xs: "none", md: "block" }}>
                             Альбом
                         </Grid>
                     </Grid>
@@ -227,14 +250,9 @@ const PlaylistPage = () => {
                                             }}
                                         >
                                             {song.title.slice(0, 30)}
-                                            {song.title.length > 30
-                                                ? "..."
-                                                : ""}
+                                            {song.title.length > 30 ? "..." : ""}
                                         </Typography>
-                                        <Typography
-                                            variant="caption"
-                                            color="text.secondary"
-                                        >
+                                        <Typography variant="caption" color="text.secondary">
                                             {song.author}
                                         </Typography>
                                     </Grid>
@@ -261,11 +279,7 @@ const PlaylistPage = () => {
                                             sm: "block",
                                         }}
                                     >
-                                        <Box
-                                            height="100%"
-                                            display="flex"
-                                            alignItems="center"
-                                        >
+                                        <Box height="100%" display="flex" alignItems="center">
                                             <IconButton>
                                                 <FavoriteBorderIcon />
                                             </IconButton>
@@ -274,35 +288,50 @@ const PlaylistPage = () => {
                                                 sx={{
                                                     marginLeft: "15px",
                                                 }}
-                                                onClick={(e) =>
-                                                    handleOpenSongSettings(e)
-                                                }
+                                                onClick={(e) => handleOpenSongSettings(e)}
                                             >
                                                 <MoreVertIcon />
                                             </IconButton>
                                         </Box>
                                     </Grid>
                                 </Grid>
-
-                                <Menu
-                                    open={isSongSettingOpen}
-                                    anchorEl={songSettingsAnchorElement}
-                                    onClose={handleCloseSongSettings}
-                                    anchorOrigin={{
-                                        horizontal: "center",
-                                        vertical: "bottom",
-                                    }}
-                                    transformOrigin={{
-                                        horizontal: "center",
-                                        vertical: "top",
-                                    }}
-                                >
-                                    <MenuItem>Скачать</MenuItem>
-                                    <MenuItem>Экспорт</MenuItem>
-                                </Menu>
                             </Stack>
                         );
                     })}
+
+                    <Menu
+                        open={isSongSettingOpen}
+                        anchorEl={songSettingsAnchorElement}
+                        onClose={handleCloseSongSettings}
+                        anchorOrigin={{
+                            horizontal: "center",
+                            vertical: "bottom",
+                        }}
+                        transformOrigin={{
+                            horizontal: "center",
+                            vertical: "top",
+                        }}
+                    >
+                        <MenuItem>Скачать</MenuItem>
+                        <MenuItem>Экспорт</MenuItem>
+                    </Menu>
+
+                    <Menu
+                        open={isPlaylistSettingOpen}
+                        anchorEl={playlistSettingsAnchorElement}
+                        onClose={handleClosePlaylistSettings}
+                        anchorOrigin={{
+                            horizontal: "center",
+                            vertical: "bottom",
+                        }}
+                        transformOrigin={{
+                            horizontal: "center",
+                            vertical: "top",
+                        }}
+                    >
+                        <MenuItem>Скачать</MenuItem>
+                        <MenuItem>Экспорт</MenuItem>
+                    </Menu>
                 </Stack>
             </Stack>
         </Stack>

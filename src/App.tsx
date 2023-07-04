@@ -2,6 +2,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthPage from "./pages/AuthPage/AuthPage";
 import { Routes, Route } from "react-router-dom";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
+import Navbar from "./components/Navbar";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -36,8 +37,8 @@ const lightTheme = createTheme({
             },
             secondary: "#242A38",
             bg: {
-                main: "#E7EBF0",
-                secondary: "#ffffff",
+                secondary: "#FFFAFA",
+                main: "#ffffff",
             },
             main: "#ffffff",
         },
@@ -47,12 +48,10 @@ const lightTheme = createTheme({
 function App() {
     return (
         <ThemeProvider theme={lightTheme}>
+            <Navbar />
             <Routes>
                 <Route path="" element={<AuthPage />} />
-                <Route
-                    path="/:userName/playlist/:playlistName"
-                    element={<PlaylistPage />}
-                />
+                <Route path="/:userName/playlist/:playlistName" element={<PlaylistPage />} />
             </Routes>
         </ThemeProvider>
     );

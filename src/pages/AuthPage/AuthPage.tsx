@@ -22,11 +22,11 @@ const AuthPage = () => {
             <Stack
                 sx={{
                     dispaly: "flex",
-                    justifyContent: "center",
                     alignItems: "center",
+                    justifyContent: "center",
+                    height: "100%",
                 }}
                 bgcolor="custom.bg.main"
-                className="App"
             >
                 <Stack
                     sx={{
