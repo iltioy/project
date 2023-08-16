@@ -5,6 +5,8 @@ import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import Navbar from "./components/Navbar";
 import { useRef } from "react";
 import AllPlaylistsPage from "./pages/AllPlaylistsPlage/AllPlaylistsPage";
+import RadioPage from "./pages/RadioPage/RadioPage";
+import { Box } from "@mui/material";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -55,7 +57,7 @@ function App() {
     const topRef = useRef<HTMLSpanElement | null>(null);
 
     return (
-        <div className="App">
+        <Box component="div" bgcolor="custom.bg.main" className="App">
             <ThemeProvider theme={darkTheme}>
                 <span ref={topRef}></span>
                 <Navbar topRef={topRef} />
@@ -70,9 +72,10 @@ function App() {
                         path="/:username/playlists"
                         element={<AllPlaylistsPage />}
                     />
+                    <Route path="/radio" element={<RadioPage />} />
                 </Routes>
             </ThemeProvider>
-        </div>
+        </Box>
     );
 }
 

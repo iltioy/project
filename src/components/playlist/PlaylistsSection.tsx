@@ -1,5 +1,5 @@
 import { Grid, Stack, Typography, Divider } from "@mui/material";
-import PlaylistItem from "../../components/PlaylistItem";
+import PlaylistItem from "./PlaylistItem";
 import { playlists } from "../../faker";
 
 interface PlaylistsSectionProps {
@@ -17,11 +17,7 @@ const PlaylistsSection: React.FC<PlaylistsSectionProps> = ({ title }) => {
                 }}
                 color="text.primary"
             >
-                <Stack
-                    sx={{
-                        width: "80%",
-                    }}
-                >
+                <Stack>
                     <Typography
                         variant="h4"
                         sx={{
@@ -40,7 +36,7 @@ const PlaylistsSection: React.FC<PlaylistsSectionProps> = ({ title }) => {
                     <Grid container spacing={2}>
                         {playlists.map((playlist, index) => {
                             return (
-                                <Grid item>
+                                <Grid item key={index}>
                                     <PlaylistItem
                                         key={index}
                                         playlist={playlist}

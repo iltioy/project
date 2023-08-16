@@ -36,7 +36,6 @@ const RegisterForm = ({ setPage, setConfEmail }: RegisterFormProps) => {
         },
         validationSchema: registerValidationSchema,
         onSubmit: async (values) => {
-            console.log("first");
             // setPage("confirmEmail");
 
             setIsLoading(true);
@@ -66,8 +65,14 @@ const RegisterForm = ({ setPage, setConfEmail }: RegisterFormProps) => {
                     fullWidth
                     value={registerFormik.values.email}
                     onChange={registerFormik.handleChange}
-                    error={registerFormik.touched.email && Boolean(registerFormik.errors.email)}
-                    helperText={registerFormik.touched.email && registerFormik.errors.email}
+                    error={
+                        registerFormik.touched.email &&
+                        Boolean(registerFormik.errors.email)
+                    }
+                    helperText={
+                        registerFormik.touched.email &&
+                        registerFormik.errors.email
+                    }
                 />
 
                 <FormLabel htmlFor="password">Введите пароль:</FormLabel>
@@ -84,9 +89,13 @@ const RegisterForm = ({ setPage, setConfEmail }: RegisterFormProps) => {
                     value={registerFormik.values.password}
                     onChange={registerFormik.handleChange}
                     error={
-                        registerFormik.touched.password && Boolean(registerFormik.errors.password)
+                        registerFormik.touched.password &&
+                        Boolean(registerFormik.errors.password)
                     }
-                    helperText={registerFormik.touched.password && registerFormik.errors.password}
+                    helperText={
+                        registerFormik.touched.password &&
+                        registerFormik.errors.password
+                    }
                 />
                 <TextField
                     type="password"

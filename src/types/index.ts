@@ -17,3 +17,9 @@ interface PlaylistAdditionalInfo {
     numberOfSongs: number;
     numberOfListens: number;
 }
+
+export const enum RadioSubPage {
+    ALL = "ВСЁ",
+    NEW = "НОВИНКИ",
+    TRENDS = "В ТРЕНДЕ",
+}

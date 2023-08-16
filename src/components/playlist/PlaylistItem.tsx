@@ -1,9 +1,9 @@
 import { Stack, Typography, Box } from "@mui/material";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import IosShareIcon from "@mui/icons-material/IosShare";
-import useHold from "../hooks/useHold";
+import useHold from "../../hooks/useHold";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { PlaylistInfo } from "../types";
+import { PlaylistInfo } from "../../types";
 
 const PlaylistItemIcons = () => {
     const { ref: favIconRef, scale: favIconScale } = useHold({

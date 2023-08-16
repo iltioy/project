@@ -16,8 +16,6 @@ const useHold = ({ size, initialScale }: useHoldProps) => {
     const ref = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
-        console.log(ref.current);
-
         if (!ref.current) return;
 
         ref.current.addEventListener("mousedown", pressingDown, false);
@@ -36,7 +34,6 @@ const useHold = ({ size, initialScale }: useHoldProps) => {
 
     function pressingDown(e: any) {
         // Start the timer
-        console.log("pressing");
         requestAnimationFrame(timer);
         e.preventDefault();
     }

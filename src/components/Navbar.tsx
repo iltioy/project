@@ -39,9 +39,15 @@ const Navbar = ({ topRef }: NavbarProps) => {
                 display: "flex",
                 alignItems: "center",
                 height: "64px",
+                borderBottom: "1px solid grey",
             }}
         >
-            <Toolbar sx={{ width: { xs: "100%", sm: "80%" } }}>
+            <Toolbar
+                sx={{
+                    width: { xs: "100%", sm: "80%" },
+                    padding: "0px !important",
+                }}
+            >
                 <Typography
                     variant="h6"
                     color="text.primary"
@@ -52,8 +58,12 @@ const Navbar = ({ topRef }: NavbarProps) => {
                             xs: "1",
                             md: "unset",
                         },
+                        cursor: "pointer",
                     }}
                     noWrap
+                    onClick={() => {
+                        navigate("radio");
+                    }}
                 >
                     Твоя Музыка
                 </Typography>
@@ -69,7 +79,13 @@ const Navbar = ({ topRef }: NavbarProps) => {
                         },
                     }}
                 >
-                    <Button color="inherit" sx={{ marginRight: "5px" }}>
+                    <Button
+                        color="inherit"
+                        sx={{ marginRight: "5px" }}
+                        onClick={() => {
+                            navigate("radio");
+                        }}
+                    >
                         Радио
                     </Button>
 
