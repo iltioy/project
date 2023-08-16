@@ -11,6 +11,7 @@ import { useLocation } from "react-router";
 import SearchIcon from "@mui/icons-material/Search";
 import { useState } from "react";
 import SearchWindow from "./SearchWindow";
+import { useNavigate } from "react-router";
 
 interface NavbarProps {
     topRef: React.MutableRefObject<HTMLSpanElement | null>;
@@ -19,6 +20,7 @@ interface NavbarProps {
 const Navbar = ({ topRef }: NavbarProps) => {
     const theme = useTheme();
     const location = useLocation();
+    const navigate = useNavigate();
 
     let themeColor = theme.palette.mode === "dark" ? "white" : "black";
 
@@ -51,6 +53,7 @@ const Navbar = ({ topRef }: NavbarProps) => {
                             md: "unset",
                         },
                     }}
+                    noWrap
                 >
                     Твоя Музыка
                 </Typography>
@@ -74,7 +77,12 @@ const Navbar = ({ topRef }: NavbarProps) => {
                         Новинки
                     </Button>
 
-                    <Button color="inherit">Мои плейлисты</Button>
+                    <Button
+                        color="inherit"
+                        onClick={() => navigate("username/playlists")}
+                    >
+                        Мои плейлисты
+                    </Button>
                 </Stack>
 
                 <Stack
@@ -113,12 +121,14 @@ const Navbar = ({ topRef }: NavbarProps) => {
                             setIsSearchOpened(true);
                             topRef.current?.scrollIntoView();
                         }}
-                        onBlur={() => setIsSearchOpened(false)}
+                        // onBlur={() => setIsSearchOpened(false)}
                     />
                 </Stack>
             </Toolbar>
 
-            {isSearchOpened && <SearchWindow />}
+            {isSearchOpened && (
+                <SearchWindow setIsSearchOpened={setIsSearchOpened} />
+            )}
         </AppBar>
     );
 };

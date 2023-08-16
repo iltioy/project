@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import Navbar from "./components/Navbar";
 import { useRef } from "react";
+import AllPlaylistsPage from "./pages/AllPlaylistsPlage/AllPlaylistsPage";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -43,6 +44,10 @@ const lightTheme = createTheme({
             },
             main: "#ffffff",
         },
+
+        // primary: {
+        //     main: "#F78361",
+        // },
     },
 });
 
@@ -50,18 +55,24 @@ function App() {
     const topRef = useRef<HTMLSpanElement | null>(null);
 
     return (
-        <ThemeProvider theme={darkTheme}>
-            <span ref={topRef}></span>
-            <Navbar topRef={topRef} />
+        <div className="App">
+            <ThemeProvider theme={darkTheme}>
+                <span ref={topRef}></span>
+                <Navbar topRef={topRef} />
 
-            <Routes>
-                <Route path="" element={<AuthPage />} />
-                <Route
-                    path="/:userName/playlist/:playlistName"
-                    element={<PlaylistPage />}
-                />
-            </Routes>
-        </ThemeProvider>
+                <Routes>
+                    <Route path="" element={<AuthPage />} />
+                    <Route
+                        path="/:username/playlist/:playlistName"
+                        element={<PlaylistPage />}
+                    />
+                    <Route
+                        path="/:username/playlists"
+                        element={<AllPlaylistsPage />}
+                    />
+                </Routes>
+            </ThemeProvider>
+        </div>
     );
 }
 

@@ -1,10 +1,11 @@
-import { Stack, IconButton, Box, Typography } from "@mui/material";
+import { Stack, IconButton, Box, Typography, Button } from "@mui/material";
 
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { PlaylistInfo } from "../../types";
 import { useTheme } from "@mui/material/styles";
+import MixSongsButton from "../../components/MixSongsButton";
 
 interface PlaylistHeaderProps {
     playlist: PlaylistInfo;
@@ -78,6 +79,9 @@ const PlaylistHeader = ({
                                     ? "black"
                                     : "white"
                             }`,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
                         }}
                         color="text.primary"
                     >
@@ -95,19 +99,33 @@ const PlaylistHeader = ({
                                     ? "black"
                                     : "white"
                             }`,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                            whiteSpace: "nowrap",
                         }}
                         color="text.primary"
                     >
                         {playlist.username}
                     </Typography>
 
-                    <Box>
+                    <Box
+                        sx={{
+                            marginBottom: {
+                                xs: "0px",
+                                md: "20px",
+                            },
+                        }}
+                    >
                         <IconButton>
                             <FavoriteBorderIcon color="warning" />
                         </IconButton>
                         <IconButton onClick={handleOpenPlaylistSettings}>
                             <MoreHorizIcon color="warning" />
                         </IconButton>
+                    </Box>
+
+                    <Box>
+                        <MixSongsButton />
                     </Box>
                 </Stack>
             </Stack>

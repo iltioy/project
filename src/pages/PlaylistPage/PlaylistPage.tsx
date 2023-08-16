@@ -1,8 +1,6 @@
 import { Stack, Menu, MenuItem } from "@mui/material";
-import { Params, useParams } from "react-router";
-import { faker } from "@faker-js/faker";
 
-import { useTheme } from "@mui/material/styles";
+import { faker } from "@faker-js/faker";
 
 import "./playlistPage.styles.css";
 import { useState } from "react";
@@ -10,28 +8,8 @@ import { PlaylistInfo, SongType } from "../../types";
 import PlaylistHeader from "./PlaylistHeader";
 import PlaylistSongs from "./PlaylistSongs";
 import useMenu from "../../hooks/useMenu";
-
-let playlist: PlaylistInfo = {
-    imageURL: faker.image.url(),
-    title: faker.lorem.words(),
-    username: faker.person.fullName(),
-    info: {
-        numberOfListens: 100,
-        numberOfSongs: 199,
-    },
-};
-
-let data: SongType[] = [];
-
-for (let i = 0; i < 50; i++) {
-    data.push({
-        id: faker.string.uuid(),
-        album: faker.music.genre(),
-        author: faker.person.fullName(),
-        imageURL: faker.image.url(),
-        title: faker.music.songName(),
-    });
-}
+import { playlist } from "../../faker";
+import { songs as data } from "../../faker";
 
 const PlaylistPage = () => {
     const {
@@ -49,7 +27,12 @@ const PlaylistPage = () => {
     } = useMenu();
 
     return (
-        <Stack height="100%" flexDirection="column">
+        <Stack
+            height="100%"
+            flexDirection="column"
+            bgcolor="custom.bg.main"
+            overflow="auto"
+        >
             <PlaylistHeader
                 handleOpenPlaylistSettings={handleOpenPlaylistSettings}
                 playlist={playlist}
