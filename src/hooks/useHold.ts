@@ -9,7 +9,7 @@ const useHold = ({ size, initialScale }: useHoldProps) => {
     let timerID: any;
     let counter = 0;
 
-    let pressHoldDuration = 10;
+    let pressHoldDuration = 1;
 
     const [scale, setScale] = useState(initialScale || 1);
 

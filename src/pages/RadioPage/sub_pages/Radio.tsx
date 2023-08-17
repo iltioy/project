@@ -4,17 +4,9 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useState } from "react";
 import SettingsDrawer from "../../../components/SettingsDrawer";
+import PlaylistCarousel from "../../../components/playlist/PlaylistCarousel";
 import { playlists } from "../../../faker";
-import PlaylistItem from "../../../components/playlist/PlaylistItem";
-import Carousel from "react-multi-carousel";
-import "react-multi-carousel/lib/styles.css";
-
-const responsive = {
-    superLargeDesktop: {
-        breakpoint: { max: 4000, min: 1 },
-        items: 5,
-    },
-};
+import PlaylistCarouselSection from "../../../components/playlist/PlaylistCarouselSection";
 
 const Radio = () => {
     const [isSettingsDrawerOpen, setIsSettingsDrawerOpen] = useState(false);
@@ -67,9 +59,7 @@ const Radio = () => {
                                             marginRight: "5px",
                                         }}
                                     />
-                                    <Typography variant="h4">
-                                        Моя волна
-                                    </Typography>
+                                    <Typography variant="h4">Моя волна</Typography>
                                 </Stack>
 
                                 <Stack
@@ -108,16 +98,7 @@ const Radio = () => {
                         </Stack>
                     </Stack>
                     {/* <PlaylistsSection title="Поп" /> */}
-                    <Carousel
-                        responsive={responsive}
-                        infinite
-                        draggable={false}
-                        className="noselect"
-                    >
-                        {playlists.map((playlist) => {
-                            return <PlaylistItem playlist={playlist} />;
-                        })}
-                    </Carousel>
+                    <PlaylistCarouselSection playlists={playlists} title="Новые" />
                 </Stack>
             </Stack>
         </>

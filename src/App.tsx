@@ -64,14 +64,8 @@ function App() {
 
                 <Routes>
                     <Route path="" element={<AuthPage />} />
-                    <Route
-                        path="/:username/playlist/:playlistName"
-                        element={<PlaylistPage />}
-                    />
-                    <Route
-                        path="/:username/playlists"
-                        element={<AllPlaylistsPage />}
-                    />
+                    <Route path="/:username/playlist/:playlistName" element={<PlaylistPage />} />
+                    <Route path="/:username/playlists" element={<AllPlaylistsPage />} />
                     <Route path="/radio" element={<RadioPage />} />
                 </Routes>
             </ThemeProvider>

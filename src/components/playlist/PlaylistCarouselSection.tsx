@@ -1,12 +1,13 @@
-import { Grid, Stack, Typography, Divider } from "@mui/material";
-import PlaylistItem from "./PlaylistItem";
-import { playlists } from "../../faker";
+import { Stack, Typography, Divider } from "@mui/material";
+import PlaylistCarousel from "./PlaylistCarousel";
+import { PlaylistInfo } from "../../types";
 
-interface PlaylistsSectionProps {
+interface PlaylistCarouselSectionProps {
     title: string;
+    playlists: PlaylistInfo[];
 }
 
-const PlaylistsSection: React.FC<PlaylistsSectionProps> = ({ title }) => {
+const PlaylistCarouselSection: React.FC<PlaylistCarouselSectionProps> = ({ title, playlists }) => {
     return (
         <>
             <Stack
@@ -17,7 +18,7 @@ const PlaylistsSection: React.FC<PlaylistsSectionProps> = ({ title }) => {
                 }}
                 color="text.primary"
             >
-                <Stack sx={{ width: "100%" }}>
+                <Stack width="100%">
                     <Typography
                         variant="h4"
                         sx={{
@@ -33,19 +34,11 @@ const PlaylistsSection: React.FC<PlaylistsSectionProps> = ({ title }) => {
                         }}
                     />
 
-                    <Grid container spacing={2}>
-                        {playlists.map((playlist, index) => {
-                            return (
-                                <Grid item key={index}>
-                                    <PlaylistItem key={index} playlist={playlist} />
-                                </Grid>
-                            );
-                        })}
-                    </Grid>
+                    <PlaylistCarousel playlists={playlists} />
                 </Stack>
             </Stack>
         </>
     );
 };
 
-export default PlaylistsSection;
+export default PlaylistCarouselSection;
