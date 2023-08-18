@@ -1,10 +1,5 @@
 import { Stack, Menu, MenuItem } from "@mui/material";
-
-import { faker } from "@faker-js/faker";
-
 import "./playlistPage.styles.css";
-import { useState } from "react";
-import { PlaylistInfo, SongType } from "../../types";
 import PlaylistHeader from "./PlaylistHeader";
 import PlaylistSongs from "./PlaylistSongs";
 import useMenu from "../../hooks/useMenu";
@@ -12,12 +7,12 @@ import { playlist } from "../../faker";
 import { songs as data } from "../../faker";
 
 const PlaylistPage = () => {
-    const {
-        handleClose: handleCloseSongSettings,
-        handleOpen: handleOpenSongSettings,
-        isOpen: isSongSettingOpen,
-        anchorElement: songSettingsAnchorElement,
-    } = useMenu();
+    // const {
+    //     handleClose: handleCloseSongSettings,
+    //     handleOpen: handleOpenSongSettings,
+    //     isOpen: isSongSettingOpen,
+    //     anchorElement: songSettingsAnchorElement,
+    // } = useMenu();
 
     const {
         anchorElement: playlistSettingsAnchorElement,
@@ -38,12 +33,9 @@ const PlaylistPage = () => {
                 playlist={playlist}
             />
 
-            <PlaylistSongs
-                data={data}
-                handleOpenSongSettings={handleOpenSongSettings}
-            />
+            <PlaylistSongs data={data} />
 
-            <Menu
+            {/* <Menu
                 open={isSongSettingOpen}
                 anchorEl={songSettingsAnchorElement}
                 onClose={handleCloseSongSettings}
@@ -58,7 +50,7 @@ const PlaylistPage = () => {
             >
                 <MenuItem>Скачать</MenuItem>
                 <MenuItem>Экспорт</MenuItem>
-            </Menu>
+            </Menu> */}
 
             <Menu
                 open={isPlaylistSettingOpen}

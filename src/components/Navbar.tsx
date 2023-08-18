@@ -44,7 +44,7 @@ const Navbar = ({ topRef }: NavbarProps) => {
         >
             <Toolbar
                 sx={{
-                    width: { xs: "100%", sm: "80%" },
+                    width: { xs: "95%", sm: "80%" },
                     padding: "0px !important",
                 }}
             >

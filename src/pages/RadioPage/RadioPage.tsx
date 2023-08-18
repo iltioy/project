@@ -1,16 +1,33 @@
 import { Stack } from "@mui/material";
-import RadioHeader from "./RadioHeader";
+import RadioHeader from "./NavHeader";
 import { useState } from "react";
 import Radio from "./sub_pages/Radio";
+import Genres from "./sub_pages/Genres";
+import Trends from "./sub_pages/Trends";
 
 enum RadioSubPages {
     ALL = "ВСЁ",
-    NEW = "НОВИНКИ",
+    NEW = "ЖАНРЫ",
     TRENDS = "В ТРЕНДЕ",
 }
 
+const navItems = [
+    {
+        label: "Всё",
+        enum: RadioSubPages.ALL,
+    },
+    {
+        label: "Новинки",
+        enum: RadioSubPages.NEW,
+    },
+    {
+        label: "В тренде",
+        enum: RadioSubPages.TRENDS,
+    },
+];
+
 const RadioPage = () => {
-    const [currentSubPage, setCurrentSubPage] = useState<RadioSubPages>(
+    const [currentSubPage, setCurrentSubPage] = useState<string>(
         RadioSubPages.ALL
     );
 
@@ -25,11 +42,15 @@ const RadioPage = () => {
             paddingBottom="75px"
         >
             <RadioHeader
-                currentSubPage={currentSubPage}
-                setCurrentSubPage={setCurrentSubPage}
+                header="Главное"
+                navItems={navItems}
+                currentNavItem={currentSubPage}
+                setNavItem={setCurrentSubPage}
             />
 
-            {currentSubPage === RadioSubPages.ALL ? <Radio /> : null}
+            {currentSubPage === RadioSubPages.ALL && <Radio />}
+            {currentSubPage === RadioSubPages.NEW && <Genres />}
+            {currentSubPage === RadioSubPages.TRENDS && <Trends />}
         </Stack>
     );
 };

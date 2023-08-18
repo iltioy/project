@@ -7,6 +7,7 @@ import { styled } from "@mui/system";
 import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useTheme } from "@mui/material/styles";
+import { Divider, Stack, Typography } from "@mui/material";
 
 const StyledArrowButton = styled("div")(
     ({
@@ -34,6 +35,7 @@ const StyledArrowButton = styled("div")(
 
 interface PlaylistCarouselProps {
     playlists: PlaylistInfo[];
+    title?: string;
 }
 
 const responsive = {
@@ -59,11 +61,15 @@ const responsive = {
     },
 };
 
-const ButtonGroup = ({ next, previous, goToSlide, ...rest }: ButtonGroupProps) => {
+const ButtonGroup = ({
+    next,
+    previous,
+    goToSlide,
+    ...rest
+}: ButtonGroupProps) => {
     const { carouselState } = rest;
     const theme = useTheme();
     let themeMode = theme.palette.mode === "dark" ? "dark" : "light";
-    console.log(theme.palette.mode);
     return (
         <>
             <StyledArrowButton
@@ -92,20 +98,34 @@ const ButtonGroup = ({ next, previous, goToSlide, ...rest }: ButtonGroupProps) =
     );
 };
 
-const PlaylistCarousel: React.FC<PlaylistCarouselProps> = ({ playlists }) => {
+const PlaylistCarousel: React.FC<PlaylistCarouselProps> = ({
+    playlists,
+    title,
+}) => {
     return (
-        <Carousel
-            responsive={responsive}
-            infinite
-            draggable={false}
-            className="noselect "
-            customButtonGroup={<ButtonGroup />}
-            arrows={false}
-        >
-            {playlists.map((playlist, index) => {
-                return <PlaylistItem key={index} playlist={playlist} />;
-            })}
-        </Carousel>
+        <>
+            <Stack width="100%" flexDirection="column" color="text.primary">
+                {title && (
+                    <>
+                        <Typography variant="h4">{title}</Typography>
+                        <Divider />
+                    </>
+                )}
+
+                <Carousel
+                    responsive={responsive}
+                    infinite
+                    draggable={false}
+                    className="noselect "
+                    customButtonGroup={<ButtonGroup />}
+                    arrows={false}
+                >
+                    {playlists.map((playlist, index) => {
+                        return <PlaylistItem key={index} playlist={playlist} />;
+                    })}
+                </Carousel>
+            </Stack>
+        </>
     );
 };
 

@@ -7,6 +7,7 @@ import { useRef } from "react";
 import AllPlaylistsPage from "./pages/AllPlaylistsPlage/AllPlaylistsPage";
 import RadioPage from "./pages/RadioPage/RadioPage";
 import { Box } from "@mui/material";
+import SongTrack from "./components/song_track/SongTrack";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -58,14 +59,22 @@ function App() {
 
     return (
         <Box component="div" bgcolor="custom.bg.main" className="App">
-            <ThemeProvider theme={darkTheme}>
+            <ThemeProvider theme={lightTheme}>
                 <span ref={topRef}></span>
                 <Navbar topRef={topRef} />
 
+                <SongTrack />
+
                 <Routes>
                     <Route path="" element={<AuthPage />} />
-                    <Route path="/:username/playlist/:playlistName" element={<PlaylistPage />} />
-                    <Route path="/:username/playlists" element={<AllPlaylistsPage />} />
+                    <Route
+                        path="/:username/playlist/:playlistName"
+                        element={<PlaylistPage />}
+                    />
+                    <Route
+                        path="/:username/playlists"
+                        element={<AllPlaylistsPage />}
+                    />
                     <Route path="/radio" element={<RadioPage />} />
                 </Routes>
             </ThemeProvider>

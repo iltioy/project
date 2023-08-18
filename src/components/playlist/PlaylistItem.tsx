@@ -122,6 +122,7 @@ const PlaylistItem: React.FC<PlaylisyItemProps> = ({ playlist }) => {
                     display: "flex",
                 },
             }}
+            color="text.primary"
         >
             <Stack
                 className="hoverPlaylistItem"

@@ -1,19 +1,12 @@
 import { Grid, Stack, IconButton, Box, Typography } from "@mui/material";
-
 import { SongType } from "../../types";
 import SongRecord from "../../components/SongRecord";
 
 interface PlaylistSongsProps {
     data: SongType[];
-    handleOpenSongSettings: (
-        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    ) => void;
 }
 
-const PlaylistSongs = ({
-    data,
-    handleOpenSongSettings,
-}: PlaylistSongsProps) => {
+const PlaylistSongs = ({ data }: PlaylistSongsProps) => {
     return (
         <Stack
             sx={{
@@ -48,13 +41,7 @@ const PlaylistSongs = ({
                 </Grid>
 
                 {data.map((song: SongType) => {
-                    return (
-                        <SongRecord
-                            handleOpenSongSettings={handleOpenSongSettings}
-                            song={song}
-                            key={song.id}
-                        />
-                    );
+                    return <SongRecord song={song} key={song.id} />;
                 })}
             </Stack>
         </Stack>
