@@ -1,16 +1,22 @@
 import { makeAutoObservable } from "mobx";
-import { OrderedPlaylist } from "../types";
+import { OrderedPlaylist, PlaylistType } from "../types";
 
 class PlaylistsStore {
-    added_playlists: OrderedPlaylist[] = [];
+  added_playlists: PlaylistType[] = [];
 
-    constructor() {
-        makeAutoObservable(this);
-    }
+  constructor() {
+    makeAutoObservable(this);
+  }
 
-    setAddedPlaylists(playlists: OrderedPlaylist[]) {
-        this.added_playlists = playlists;
-    }
+  setAddedPlaylists(data: any) {
+    const ordered_added_playlists: OrderedPlaylist[] = data?.added_playlists;
+    let added_playlists: PlaylistType[] = [];
+    ordered_added_playlists.map((orderedPlaylist) => {
+      added_playlists.push(orderedPlaylist.playlist);
+    });
+
+    this.added_playlists = added_playlists;
+  }
 }
 
 export default new PlaylistsStore();

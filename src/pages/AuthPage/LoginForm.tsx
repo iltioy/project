@@ -1,14 +1,11 @@
 import * as yup from "yup";
 import { AuthPageStatus } from "./AuthPage";
 import { useFormik } from "formik";
-import { FormLabel, TextField, Link, Button } from "@mui/material";
+import { FormLabel, TextField, Link, Button, Typography } from "@mui/material";
 import axios from "axios";
 import { useStores } from "../../root-store-context";
 import { useNavigate } from "react-router";
-
-interface LoginFormProps {
-  setPage: React.Dispatch<React.SetStateAction<AuthPageStatus>>;
-}
+import { observer } from "mobx-react-lite";
 
 const loginValidationSchema = yup.object({
   email: yup
@@ -21,7 +18,7 @@ const loginValidationSchema = yup.object({
     .required("Введите пароль"),
 });
 
-const LoginForm = ({ setPage }: LoginFormProps) => {
+const LoginForm = observer(() => {
   const { userStore } = useStores();
   const navigate = useNavigate();
 
@@ -80,7 +77,7 @@ const LoginForm = ({ setPage }: LoginFormProps) => {
           name="password"
           type="password"
           fullWidth
-          sx={{ marginBottom: "25px", marginTop: "5px" }}
+          sx={{ marginBottom: "7px", marginTop: "5px" }}
           variant="outlined"
           value={loginFormik.values.password}
           onChange={loginFormik.handleChange}
@@ -92,7 +89,24 @@ const LoginForm = ({ setPage }: LoginFormProps) => {
           }
         />
 
-        <Button type="submit" variant="contained">
+        <Link
+          style={{
+            cursor: "pointer",
+          }}
+          onClick={() => navigate("/auth/password/recover")}
+        >
+          Забыли пароль?
+        </Link>
+
+        <br />
+
+        <Button
+          sx={{
+            marginTop: "17px",
+          }}
+          type="submit"
+          variant="contained"
+        >
           Отправить
         </Button>
       </form>
@@ -102,12 +116,12 @@ const LoginForm = ({ setPage }: LoginFormProps) => {
           textAlign: "center",
           cursor: "pointer",
         }}
-        onClick={() => setPage(AuthPageStatus.REGISTER)}
+        onClick={() => navigate("/auth/register")}
       >
         Регистрация
       </Link>
     </>
   );
-};
+});
 
 export default LoginForm;

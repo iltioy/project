@@ -1,10 +1,12 @@
 import * as yup from "yup";
-import { AuthPageStatus } from "./AuthPage";
 import { useFormik } from "formik";
 import { FormLabel, TextField, Link } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router";
+import { useStores } from "../../root-store-context";
+import { observer } from "mobx-react-lite";
 
 const registerValidationSchema = yup.object({
   email: yup
@@ -21,23 +23,11 @@ const registerValidationSchema = yup.object({
     .required("Введите пароль ещё раз"),
 });
 
-interface RegisterCredentials {
-  email: string;
-  password: string;
-}
-
-interface RegisterFormProps {
-  setPage: React.Dispatch<React.SetStateAction<AuthPageStatus>>;
-  setRegisterCredentials: React.Dispatch<
-    React.SetStateAction<RegisterCredentials | null>
-  >;
-}
-
-const RegisterForm = ({
-  setPage,
-  setRegisterCredentials,
-}: RegisterFormProps) => {
+const RegisterForm = observer(() => {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const { authStore } = useStores();
 
   const registerFormik = useFormik({
     initialValues: {
@@ -56,11 +46,11 @@ const RegisterForm = ({
         setIsLoading(false);
         console.log(res.status);
 
-        setRegisterCredentials({
+        authStore.setCredentials({
           email: values.email,
           password: values.password,
         });
-        setPage(AuthPageStatus.CONFIRM_EMAIL);
+        navigate("/auth/email/verify");
       } catch (error: any) {
         setIsLoading(false);
         if (error?.response?.status === 403) {
@@ -151,12 +141,12 @@ const RegisterForm = ({
           textAlign: "center",
           cursor: "pointer",
         }}
-        onClick={() => setPage(AuthPageStatus.LOGIN)}
+        onClick={() => navigate("/auth")}
       >
         Есть Аккаунт? Войти.
       </Link>
     </>
   );
-};
+});
 
 export default RegisterForm;

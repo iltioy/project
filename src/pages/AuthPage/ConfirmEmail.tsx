@@ -6,37 +6,29 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import OTPInput from "react-otp-input";
 import { useStores } from "../../root-store-context";
+import { observer } from "mobx-react-lite";
 
-interface RegisterCredentials {
-  email: string;
-  password: string;
-}
-
-interface ConfirmEmailProps {
-  setPage: React.Dispatch<React.SetStateAction<AuthPageStatus>>;
-  registerCredentials: RegisterCredentials | null;
-}
-
-const ConfirmEmail = ({ setPage, registerCredentials }: ConfirmEmailProps) => {
+const ConfirmEmail = observer(() => {
   const [otp, setOtp] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const theme = useTheme();
   const navigate = useNavigate();
 
-  const { userStore } = useStores();
+  const { userStore, authStore } = useStores();
 
   const handleCreateUser = async (code: string) => {
     try {
       const res = await axios.post("/auth/signup", {
-        email: registerCredentials?.email,
-        password: registerCredentials?.password,
+        email: authStore.email,
+        password: authStore.password,
         emailVerificationCode: code,
       });
 
       const { access_token, refresh_token } = res.data;
 
       userStore.setTokens(access_token, refresh_token);
+      authStore.clearCredentials();
       navigate("/radio");
     } catch (error: any) {
       alert(error?.message);
@@ -61,8 +53,6 @@ const ConfirmEmail = ({ setPage, registerCredentials }: ConfirmEmailProps) => {
     }
 
     setOtp(info);
-
-    // handle request and navigate
   };
 
   return (
@@ -110,13 +100,13 @@ const ConfirmEmail = ({ setPage, registerCredentials }: ConfirmEmailProps) => {
         <Link
           variant="body2"
           sx={{ cursor: "pointer" }}
-          onClick={() => setPage(AuthPageStatus.REGISTER)}
+          onClick={() => navigate("/auth/register")}
         >
           Изменить почту
         </Link>
       </Typography>
     </Stack>
   );
-};
+});
 
 export default ConfirmEmail;
