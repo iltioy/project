@@ -3,7 +3,7 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import IosShareIcon from "@mui/icons-material/IosShare";
 import useHold from "../../hooks/useHold";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import { PlaylistInfo } from "../../types";
+import { OrderedPlaylist, PlaylistInfo, PlaylistType } from "../../types";
 
 const PlaylistItemIcons = () => {
     const { ref: favIconRef, scale: favIconScale } = useHold({
@@ -103,7 +103,7 @@ const PlaylistItemIcons = () => {
 };
 
 interface PlaylisyItemProps {
-    playlist: PlaylistInfo;
+    playlist: OrderedPlaylist;
 }
 
 const PlaylistItem: React.FC<PlaylisyItemProps> = ({ playlist }) => {
@@ -156,7 +156,7 @@ const PlaylistItem: React.FC<PlaylisyItemProps> = ({ playlist }) => {
                     }}
                 >
                     <img
-                        src={playlist.imageURL}
+                        src={playlist.playlist.image.image_url}
                         alt=""
                         style={{
                             objectFit: "cover",
@@ -184,7 +184,7 @@ const PlaylistItem: React.FC<PlaylisyItemProps> = ({ playlist }) => {
                 </Stack>
 
                 <Typography width="200px" noWrap>
-                    {playlist.title}
+                    {playlist.playlist.name}
                 </Typography>
             </Stack>
         </Stack>

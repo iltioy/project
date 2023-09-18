@@ -1,7 +1,11 @@
 import { Avatar, Stack, Typography, Box } from "@mui/material";
 import MixSongsButton from "../../components/MixSongsButton";
+import { observer } from "mobx-react-lite";
+import { useStores } from "../../root-store-context";
 
-const AllPlaylistsHeader = () => {
+const AllPlaylistsHeader = observer(() => {
+    const { userStore } = useStores();
+
     return (
         <Stack
             sx={{
@@ -84,7 +88,7 @@ const AllPlaylistsHeader = () => {
                             },
                         }}
                     >
-                        art1llarionov
+                        {userStore.user.username}
                     </Typography>
 
                     <Box>
@@ -94,6 +98,6 @@ const AllPlaylistsHeader = () => {
             </Stack>
         </Stack>
     );
-};
+});
 
 export default AllPlaylistsHeader;

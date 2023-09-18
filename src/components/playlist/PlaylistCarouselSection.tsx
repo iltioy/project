@@ -1,10 +1,10 @@
 import { Stack, Typography, Divider } from "@mui/material";
 import PlaylistCarousel from "./PlaylistCarousel";
-import { PlaylistInfo } from "../../types";
+import { OrderedPlaylist, PlaylistInfo } from "../../types";
 
 interface PlaylistCarouselSectionProps {
     title: string;
-    playlists: PlaylistInfo[];
+    playlists: OrderedPlaylist[];
 }
 
 const PlaylistCarouselSection: React.FC<PlaylistCarouselSectionProps> = ({ title, playlists }) => {

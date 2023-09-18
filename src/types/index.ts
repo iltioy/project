@@ -23,3 +23,28 @@ export const enum RadioSubPage {
     NEW = "НОВИНКИ",
     TRENDS = "В ТРЕНДЕ",
 }
+
+export interface ImageType {
+    image_key?: string;
+    image_url?: string;
+}
+
+export interface PlaylistType {
+    id: number;
+    name: string;
+    is_favorite?: boolean;
+    image: ImageType;
+    owner: UserType;
+}
+
+export interface OrderedPlaylist {
+    order: number;
+    playlist: PlaylistType;
+}
+
+export interface UserType {
+    username?: string;
+    email?: string;
+    role?: string;
+    image?: ImageType;
+}

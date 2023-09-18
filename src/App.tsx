@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthPage from "./pages/AuthPage/AuthPage";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
 import Navbar from "./components/Navbar";
 import { useRef } from "react";
@@ -16,107 +16,146 @@ import { observer } from "mobx-react-lite";
 
 const dark = false;
 const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-    custom: {
-      primary: {
-        main: "#F54B64",
-        secondary: "#F78361",
-      },
-      secondary: "#242A38",
-      bg: {
-        main: "#121212",
-        secondary: "#181818",
-      },
-      main: "#121212",
-    },
+    palette: {
+        mode: "dark",
+        custom: {
+            primary: {
+                main: "#F54B64",
+                secondary: "#F78361",
+            },
+            secondary: "#242A38",
+            bg: {
+                main: "#121212",
+                secondary: "#181818",
+            },
+            main: "#121212",
+        },
 
-    // primary: {
-    //     main: "#F78361",
-    // },
-  },
+        // primary: {
+        //     main: "#F78361",
+        // },
+    },
 });
 
 const lightTheme = createTheme({
-  palette: {
-    mode: "light",
-    custom: {
-      primary: {
-        main: "#F54B64",
-        secondary: "#F78361",
-      },
-      secondary: "#242A38",
-      bg: {
-        secondary: "#FFFAFA",
-        main: "#ffffff",
-      },
-      main: "#ffffff",
-    },
+    palette: {
+        mode: "light",
+        custom: {
+            primary: {
+                main: "#F54B64",
+                secondary: "#F78361",
+            },
+            secondary: "#242A38",
+            bg: {
+                secondary: "#FFFAFA",
+                main: "#ffffff",
+            },
+            main: "#ffffff",
+        },
 
-    // primary: {
-    //     main: "#F78361",
-    // },
-  },
+        // primary: {
+        //     main: "#F78361",
+        // },
+    },
 });
 
 const App = observer(() => {
-  const topRef = useRef<HTMLSpanElement | null>(null);
+    const topRef = useRef<HTMLSpanElement | null>(null);
 
-  const { userStore } = useStores();
+    const { userStore } = useStores();
+    const navigate = useNavigate();
 
-  // const updateTokens = async () => {
-  //   if (userStore.refresh_token) {
-  //     const res = await axios.post("http://localhost:5000/auth/refrest", {}, {
-  //       headers: {
-  //         Authorization: `Bearer ${userStore.refresh_token}`
-  //       }
-  //     })
+    // const updateTokens = async () => {
+    //   if (userStore.refresh_token) {
+    //     const res = await axios.post("http://localhost:5000/auth/refrest", {}, {
+    //       headers: {
+    //         Authorization: `Bearer ${userStore.refresh_token}`
+    //       }
+    //     })
 
-  //     userStore.access_token = res.data?.access_token
-  //     userStore.re = res.data?.refresh_token
-  //   }
-  // };
-  const getUserInfo = async () => {
-    try {
-      const res = await axios.get("/users/get/me", {
-        headers: {
-          Authorization: `Bearer ${userStore.access_token}`,
-        },
-      });
+    //     userStore.access_token = res.data?.access_token
+    //     userStore.re = res.data?.refresh_token
+    //   }
+    // };
+    const getUserInfo = async () => {
+        try {
+            const res = await axios.get("/users/get/me", {
+                headers: {
+                    Authorization: `Bearer ${userStore.access_token}`,
+                },
+            });
 
-      userStore.setUserInfo(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+            userStore.setUserInfo(res.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
-  useEffect(() => {
-    getUserInfo();
-  }, [userStore.access_token]);
+    const refreshTokens = async () => {
+        try {
+            const res = await axios.post(
+                "/auth/refresh",
+                {},
+                {
+                    headers: {
+                        Authorization: `Bearer ${userStore.refresh_token}`,
+                    },
+                }
+            );
 
-  return (
-    <Box component="div" bgcolor="custom.bg.main" className="App">
-      <ThemeProvider theme={lightTheme}>
-        <span ref={topRef}></span>
-        <Navbar topRef={topRef} />
+            const { access_token, refresh_token } = res.data;
+            console.log("refreshed!");
 
-        <SongTrack />
+            userStore.setTokens(access_token, refresh_token);
+        } catch (error) {
+            logout();
+            console.log(error);
+        }
+    };
 
-        <Routes>
-          <Route path="" element={<AuthPage />} />
+    const logout = () => {
+        navigate("/");
+        userStore.logout();
+    };
 
-          <Route element={<ProtectedRoutes />}>
-            <Route
-              path="/:username/playlist/:playlistName"
-              element={<PlaylistPage />}
-            />
-            <Route path="/:username/playlists" element={<AllPlaylistsPage />} />
-            <Route path="/radio" element={<RadioPage />} />
-          </Route>
-        </Routes>
-      </ThemeProvider>
-    </Box>
-  );
+    useEffect(() => {
+        getUserInfo();
+    }, [userStore.access_token]);
+
+    useEffect(() => {
+        refreshTokens();
+        const intervalId = setInterval(() => {
+            refreshTokens();
+        }, 1000 * 60 * 4);
+
+        return () => {
+            clearInterval(intervalId);
+        };
+    }, []);
+
+    return (
+        <Box component="div" bgcolor="custom.bg.main" className="App">
+            <ThemeProvider theme={lightTheme}>
+                <span ref={topRef}></span>
+                <Navbar topRef={topRef} />
+
+                <SongTrack />
+
+                <Routes>
+                    <Route path="" element={<AuthPage />} />
+
+                    <Route element={<ProtectedRoutes />}>
+                        <Route
+                            path="/:username/playlist/:playlistName"
+                            element={<PlaylistPage />}
+                        />
+                        <Route path="/:username/playlists" element={<AllPlaylistsPage />} />
+                        <Route path="/radio" element={<RadioPage />} />
+                    </Route>
+                </Routes>
+            </ThemeProvider>
+        </Box>
+    );
 });
 
 export default App;

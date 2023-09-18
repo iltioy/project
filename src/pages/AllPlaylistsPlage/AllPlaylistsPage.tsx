@@ -4,8 +4,9 @@ import AllPlaylistsHeader from "./AllPlaylistsHeader";
 import PlaylistsSection from "../../components/playlist/PlaylistsSection";
 import PlaylistCarousel from "../../components/playlist/PlaylistCarousel";
 import { playlists } from "../../faker";
+import { observer } from "mobx-react-lite";
 
-const AllPlaylistsPage = () => {
+const AllPlaylistsPage = observer(() => {
     return (
         <Stack
             height="100%"
@@ -38,14 +39,8 @@ const AllPlaylistsPage = () => {
                             },
                         }}
                     >
-                        <PlaylistCarousel
-                            playlists={playlists}
-                            title="Ваши плейлисты"
-                        />
-                        <PlaylistCarousel
-                            playlists={playlists}
-                            title="Нравится"
-                        />
+                        <PlaylistCarousel playlists={playlists} title="Ваши плейлисты" />
+                        <PlaylistCarousel playlists={playlists} title="Нравится" />
                     </Stack>
 
                     <Stack
@@ -66,6 +61,6 @@ const AllPlaylistsPage = () => {
             </Stack>
         </Stack>
     );
-};
+});
 
 export default AllPlaylistsPage;

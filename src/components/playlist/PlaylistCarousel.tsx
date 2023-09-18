@@ -1,5 +1,5 @@
 import React from "react";
-import { PlaylistInfo } from "../../types";
+import { OrderedPlaylist, PlaylistInfo } from "../../types";
 import Carousel, { ButtonGroupProps } from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import PlaylistItem from "./PlaylistItem";
@@ -34,7 +34,7 @@ const StyledArrowButton = styled("div")(
 );
 
 interface PlaylistCarouselProps {
-    playlists: PlaylistInfo[];
+    playlists: OrderedPlaylist[];
     title?: string;
 }
 
@@ -61,12 +61,7 @@ const responsive = {
     },
 };
 
-const ButtonGroup = ({
-    next,
-    previous,
-    goToSlide,
-    ...rest
-}: ButtonGroupProps) => {
+const ButtonGroup = ({ next, previous, goToSlide, ...rest }: ButtonGroupProps) => {
     const { carouselState } = rest;
     const theme = useTheme();
     let themeMode = theme.palette.mode === "dark" ? "dark" : "light";
@@ -98,10 +93,7 @@ const ButtonGroup = ({
     );
 };
 
-const PlaylistCarousel: React.FC<PlaylistCarouselProps> = ({
-    playlists,
-    title,
-}) => {
+const PlaylistCarousel: React.FC<PlaylistCarouselProps> = ({ playlists, title }) => {
     return (
         <>
             <Stack width="100%" flexDirection="column" color="text.primary">

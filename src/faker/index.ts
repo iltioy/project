@@ -1,4 +1,4 @@
-import { PlaylistInfo, SongType } from "../types";
+import { OrderedPlaylist, PlaylistInfo, PlaylistType, SongType } from "../types";
 import { faker } from "@faker-js/faker";
 
 export let playlist: PlaylistInfo = {
@@ -24,18 +24,26 @@ for (let i = 0; i < 10; i++) {
     });
 }
 
-let playlistData: PlaylistInfo[] = [];
+let playlistData: OrderedPlaylist[] = [];
 
 for (let i = 0; i < 10; i++) {
     playlistData.push({
-        info: {
-            numberOfListens: 100,
-            numberOfSongs: 100,
+        order: 1,
+        playlist: {
+            owner: {
+                email: faker.person.fullName(),
+                image: {
+                    image_url: faker.image.url(),
+                },
+                role: "user",
+                username: faker.person.fullName(),
+            },
+            image: {
+                image_url: faker.image.url(),
+            },
+            id: 1,
+            name: "Lorem ipsum dolor sit amet consectetur adipisicing elit.Aspernatur veniam eligendi quia odit quasi in, laborumsunt. Quos, aliquam? Autem unde ut porro rerum quoscorporis vel modi suscipit iure.",
         },
-        username: faker.person.fullName(),
-        imageURL: faker.image.url(),
-        //    title: faker.music.songName(),
-        title: "Lorem ipsum dolor sit amet consectetur adipisicing elit.Aspernatur veniam eligendi quia odit quasi in, laborumsunt. Quos, aliquam? Autem unde ut porro rerum quoscorporis vel modi suscipit iure.",
     });
 }
 
