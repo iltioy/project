@@ -94,7 +94,7 @@ const App = observer(() => {
       });
 
       userStore.setUserInfo(res.data);
-      playlistsStore.setAddedPlaylists(res.data);
+      playlistsStore.setUserPlaylists(res.data);
     } catch (error) {
       console.log(error);
     }

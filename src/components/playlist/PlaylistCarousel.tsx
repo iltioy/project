@@ -9,8 +9,9 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useTheme } from "@mui/material/styles";
 import { Divider, Stack, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import { useNavigate } from "react-router";
+import { useParams } from "react-router";
 import CreatePlaylistItem from "./CreatePlaylistItem";
+import { useStores } from "../../root-store-context";
 
 const StyledArrowButton = styled("div")(
   ({
@@ -65,45 +66,45 @@ const responsive = {
   },
 };
 
-const ButtonGroup = ({
-  next,
-  previous,
-  goToSlide,
-  ...rest
-}: ButtonGroupProps) => {
-  const { carouselState } = rest;
-  const theme = useTheme();
-  let themeMode = theme.palette.mode === "dark" ? "dark" : "light";
-  return (
-    <>
-      <StyledArrowButton
-        onClick={() => (previous ? previous() : null)}
-        sx={{
-          left: "10px",
-        }}
-      >
-        <NavigateBeforeIcon
-          htmlColor={`${themeMode === "light" ? "black" : "white"}`}
-          sx={{ fontSize: "27px" }}
-        />
-      </StyledArrowButton>
-      <StyledArrowButton
-        onClick={() => (next ? next() : null)}
-        sx={{
-          right: "10px",
-        }}
-      >
-        <NavigateNextIcon
-          htmlColor={`${themeMode === "light" ? "black" : "white"}`}
-          sx={{ fontSize: "27px" }}
-        />
-      </StyledArrowButton>
-    </>
-  );
-};
+const ButtonGroup = observer(
+  ({ next, previous, goToSlide, ...rest }: ButtonGroupProps) => {
+    const { carouselState } = rest;
+    const theme = useTheme();
+    let themeMode = theme.palette.mode === "dark" ? "dark" : "light";
+    return (
+      <>
+        <StyledArrowButton
+          onClick={() => (previous ? previous() : null)}
+          sx={{
+            left: "10px",
+          }}
+        >
+          <NavigateBeforeIcon
+            htmlColor={`${themeMode === "light" ? "black" : "white"}`}
+            sx={{ fontSize: "27px" }}
+          />
+        </StyledArrowButton>
+        <StyledArrowButton
+          onClick={() => (next ? next() : null)}
+          sx={{
+            right: "10px",
+          }}
+        >
+          <NavigateNextIcon
+            htmlColor={`${themeMode === "light" ? "black" : "white"}`}
+            sx={{ fontSize: "27px" }}
+          />
+        </StyledArrowButton>
+      </>
+    );
+  }
+);
 
 const PlaylistCarousel: React.FC<PlaylistCarouselProps> = observer(
   ({ playlists, title, isOwnedPlaylists }) => {
+    const { username } = useParams();
+    const { userStore } = useStores();
+
     return (
       <>
         <Stack width="100%" flexDirection="column" color="text.primary">
@@ -122,9 +123,11 @@ const PlaylistCarousel: React.FC<PlaylistCarouselProps> = observer(
             customButtonGroup={<ButtonGroup />}
             arrows={false}
           >
-            {playlists[0] ? <PlaylistItem playlist={playlists[0]} /> : ""}
+            {playlists[0] && <PlaylistItem playlist={playlists[0]} />}
 
-            {isOwnedPlaylists && <CreatePlaylistItem />}
+            {isOwnedPlaylists && username === userStore.user.username && (
+              <CreatePlaylistItem />
+            )}
 
             {playlists.map((playlist, index) => {
               if (index === 0) return;

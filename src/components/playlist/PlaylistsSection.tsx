@@ -2,6 +2,9 @@ import { Grid, Stack, Typography, Divider } from "@mui/material";
 import PlaylistItem from "./PlaylistItem";
 import { PlaylistType } from "../../types";
 import CreatePlaylistItem from "./CreatePlaylistItem";
+import { observer } from "mobx-react-lite";
+import { useParams } from "react-router";
+import { useStores } from "../../root-store-context";
 
 interface PlaylistsSectionProps {
   title: string;
@@ -9,64 +12,68 @@ interface PlaylistsSectionProps {
   isOwnedPlaylists?: boolean;
 }
 
-const PlaylistsSection: React.FC<PlaylistsSectionProps> = ({
-  title,
-  playlists,
-  isOwnedPlaylists,
-}) => {
-  return (
-    <>
-      <Stack
-        flexDirection="column"
-        sx={{
-          width: "100%",
-          alignItems: "center",
-        }}
-        color="text.primary"
-      >
-        <Stack sx={{ width: "100%" }}>
-          <Typography
-            variant="h4"
-            sx={{
-              marginBottom: "10px",
-            }}
-            noWrap
-          >
-            {title}
-          </Typography>
-          <Divider
-            sx={{
-              marginBottom: "25px",
-            }}
-          />
+const PlaylistsSection: React.FC<PlaylistsSectionProps> = observer(
+  ({ title, playlists, isOwnedPlaylists }) => {
+    const { username } = useParams();
+    const { userStore } = useStores();
 
-          <Grid container spacing={2}>
-            {playlists.map((playlist, index) => {
-              console.log("index", index);
-              if (index === 0 && isOwnedPlaylists) {
+    return (
+      <>
+        <Stack
+          flexDirection="column"
+          sx={{
+            width: "100%",
+            alignItems: "center",
+          }}
+          color="text.primary"
+        >
+          <Stack sx={{ width: "100%" }}>
+            <Typography
+              variant="h4"
+              sx={{
+                marginBottom: "10px",
+              }}
+              noWrap
+            >
+              {title}
+            </Typography>
+            <Divider
+              sx={{
+                marginBottom: "25px",
+              }}
+            />
+
+            <Grid container spacing={2}>
+              {playlists.map((playlist, index) => {
+                if (
+                  index === 0 &&
+                  isOwnedPlaylists &&
+                  username === userStore.user.username
+                ) {
+                  return (
+                    <>
+                      <Grid item key={index}>
+                        <PlaylistItem key={index} playlist={playlist} />
+                      </Grid>
+                      <Grid item>
+                        <CreatePlaylistItem />
+                      </Grid>
+                    </>
+                  );
+                }
+
                 return (
-                  <>
-                    <Grid item key={index}>
-                      <PlaylistItem key={index} playlist={playlist} />
-                    </Grid>
-                    <Grid item>
-                      <CreatePlaylistItem />
-                    </Grid>
-                  </>
+                  <Grid item key={index}>
+                    <PlaylistItem key={index} playlist={playlist} />
+                  </Grid>
                 );
-              }
-
-              return (
-                <Grid item key={index}>
-                  <PlaylistItem key={index} playlist={playlist} />
-                </Grid>
-              );
-            })}
-          </Grid>
+              })}
+            </Grid>
+          </Stack>
         </Stack>
-      </Stack>
-    </>
-  );
-};
+      </>
+    );
+  }
+);
 
 export default PlaylistsSection;
