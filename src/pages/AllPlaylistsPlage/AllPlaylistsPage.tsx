@@ -45,6 +45,7 @@ const AllPlaylistsPage = observer(() => {
             <PlaylistCarousel
               playlists={playlistsStore.added_playlists}
               title="Ваши плейлисты"
+              isOwnedPlaylists={true}
             />
             <PlaylistCarousel playlists={playlists} title="Нравится" />
           </Stack>
@@ -62,6 +63,7 @@ const AllPlaylistsPage = observer(() => {
             <PlaylistsSection
               playlists={playlistsStore.added_playlists}
               title="Ваши плейлисты"
+              isOwnedPlaylists={true}
             />
 
             <PlaylistsSection playlists={playlists} title="Нравится" />

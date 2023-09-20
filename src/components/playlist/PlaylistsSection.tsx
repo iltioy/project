@@ -1,15 +1,18 @@
 import { Grid, Stack, Typography, Divider } from "@mui/material";
 import PlaylistItem from "./PlaylistItem";
 import { PlaylistType } from "../../types";
+import CreatePlaylistItem from "./CreatePlaylistItem";
 
 interface PlaylistsSectionProps {
   title: string;
   playlists: PlaylistType[];
+  isOwnedPlaylists?: boolean;
 }
 
 const PlaylistsSection: React.FC<PlaylistsSectionProps> = ({
   title,
   playlists,
+  isOwnedPlaylists,
 }) => {
   return (
     <>
@@ -39,6 +42,20 @@ const PlaylistsSection: React.FC<PlaylistsSectionProps> = ({
 
           <Grid container spacing={2}>
             {playlists.map((playlist, index) => {
+              console.log("index", index);
+              if (index === 0 && isOwnedPlaylists) {
+                return (
+                  <>
+                    <Grid item key={index}>
+                      <PlaylistItem key={index} playlist={playlist} />
+                    </Grid>
+                    <Grid item>
+                      <CreatePlaylistItem />
+                    </Grid>
+                  </>
+                );
+              }
+
               return (
                 <Grid item key={index}>
                   <PlaylistItem key={index} playlist={playlist} />

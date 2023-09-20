@@ -10,6 +10,7 @@ import { useTheme } from "@mui/material/styles";
 import { Divider, Stack, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router";
+import CreatePlaylistItem from "./CreatePlaylistItem";
 
 const StyledArrowButton = styled("div")(
   ({
@@ -38,6 +39,7 @@ const StyledArrowButton = styled("div")(
 interface PlaylistCarouselProps {
   playlists: PlaylistType[];
   title?: string;
+  isOwnedPlaylists?: boolean;
 }
 
 const responsive = {
@@ -101,7 +103,7 @@ const ButtonGroup = ({
 };
 
 const PlaylistCarousel: React.FC<PlaylistCarouselProps> = observer(
-  ({ playlists, title }) => {
+  ({ playlists, title, isOwnedPlaylists }) => {
     return (
       <>
         <Stack width="100%" flexDirection="column" color="text.primary">
@@ -120,7 +122,12 @@ const PlaylistCarousel: React.FC<PlaylistCarouselProps> = observer(
             customButtonGroup={<ButtonGroup />}
             arrows={false}
           >
+            {playlists[0] ? <PlaylistItem playlist={playlists[0]} /> : ""}
+
+            {isOwnedPlaylists && <CreatePlaylistItem />}
+
             {playlists.map((playlist, index) => {
+              if (index === 0) return;
               return <PlaylistItem key={index} playlist={playlist} />;
             })}
           </Carousel>
