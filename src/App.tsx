@@ -17,7 +17,9 @@ import { useLocation } from "react-router-dom";
 import LoginForm from "./pages/AuthPage/LoginForm";
 import RegisterForm from "./pages/AuthPage/RegisterForm";
 import ConfirmEmail from "./pages/AuthPage/ConfirmEmail";
-import RecoverPassword from "./pages/AuthPage/RecoverPassword";
+import RecoverPasswordRequest from "./pages/AuthPage/PasswordRecovery/RecoverPasswordRequest";
+import RecoverPassword from "./pages/AuthPage/PasswordRecovery/RecoverPassword";
+import { ReactQueryDevtools } from "react-query/devtools";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -91,8 +93,6 @@ const App = observer(() => {
         },
       });
 
-      console.log(res.data);
-
       userStore.setUserInfo(res.data);
       playlistsStore.setAddedPlaylists(res.data);
     } catch (error) {
@@ -113,7 +113,6 @@ const App = observer(() => {
       );
 
       const { access_token, refresh_token } = res.data;
-      console.log("refreshed!");
 
       userStore.setTokens(access_token, refresh_token);
     } catch (error) {
@@ -156,20 +155,19 @@ const App = observer(() => {
             <Route index element={<LoginForm />} />
             <Route path="register" element={<RegisterForm />} />
             <Route path="email/verify" element={<ConfirmEmail />} />
-            <Route path="password/recover" element={<RecoverPassword />} />
+            <Route
+              path="password/recover"
+              element={<RecoverPasswordRequest />}
+            />
             <Route
               path="password/recover/:recoveryId"
               element={<RecoverPassword />}
             />
           </Route>
-          <Route
-            path="/auth/password/recover/:recoveryId"
-            element={<AuthPage />}
-          />
 
           <Route element={<ProtectedRoutes />}>
             <Route
-              path="/:username/playlist/:playlistName"
+              path="/:username/playlist/:playlistId"
               element={<PlaylistPage />}
             />
             <Route path="/:username/playlists" element={<AllPlaylistsPage />} />
@@ -177,6 +175,7 @@ const App = observer(() => {
           </Route>
         </Routes>
       </ThemeProvider>
+      <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
     </Box>
   );
 });

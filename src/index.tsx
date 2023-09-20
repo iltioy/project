@@ -6,16 +6,21 @@ import { BrowserRouter } from "react-router-dom";
 import { RootStoreContext } from "./root-store-context";
 import RootStore from "./stores/root-stote";
 import "./utils/axios-global";
+import { QueryClientProvider, QueryClient } from "react-query";
+
+const queryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <RootStoreContext.Provider value={new RootStore()}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </RootStoreContext.Provider>
+    <QueryClientProvider client={queryClient}>
+      <RootStoreContext.Provider value={new RootStore()}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </RootStoreContext.Provider>
+    </QueryClientProvider>
   </React.StrictMode>
 );

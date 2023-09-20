@@ -9,6 +9,7 @@ import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useTheme } from "@mui/material/styles";
 import { Divider, Stack, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
+import { useNavigate } from "react-router";
 
 const StyledArrowButton = styled("div")(
   ({

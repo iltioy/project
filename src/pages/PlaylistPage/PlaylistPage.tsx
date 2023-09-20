@@ -1,75 +1,86 @@
-import { Stack, Menu, MenuItem } from "@mui/material";
+import { Stack, Menu, MenuItem, Skeleton } from "@mui/material";
 import "./playlistPage.styles.css";
 import PlaylistHeader from "./PlaylistHeader";
 import PlaylistSongs from "./PlaylistSongs";
 import useMenu from "../../hooks/useMenu";
-import { playlist } from "../../faker";
-import { songs as data } from "../../faker";
+import { useQuery } from "react-query";
+import axios from "axios";
+import { useParams } from "react-router";
+import { OrderedSongType, PlaylistType, SongType } from "../../types";
+import { observer } from "mobx-react-lite";
+import { useState } from "react";
 
-const PlaylistPage = () => {
-    // const {
-    //     handleClose: handleCloseSongSettings,
-    //     handleOpen: handleOpenSongSettings,
-    //     isOpen: isSongSettingOpen,
-    //     anchorElement: songSettingsAnchorElement,
-    // } = useMenu();
+const PlaylistPage = observer(() => {
+  const { playlistId } = useParams();
+  const [songs, setSongs] = useState<SongType[]>([]);
 
-    const {
-        anchorElement: playlistSettingsAnchorElement,
-        handleClose: handleClosePlaylistSettings,
-        handleOpen: handleOpenPlaylistSettings,
-        isOpen: isPlaylistSettingOpen,
-    } = useMenu();
+  const extractSongsFromOrderdSongs = (playlist?: PlaylistType) => {
+    if (!playlist) return;
+    const orderedSongs: OrderedSongType[] = playlist.songs;
+    const newSongs: SongType[] = [];
+    orderedSongs.map((orderedSong) => {
+      newSongs.push(orderedSong.song);
+    });
 
-    return (
-        <Stack
-            height="100%"
-            flexDirection="column"
-            bgcolor="custom.bg.main"
-            overflow="auto"
-        >
-            <PlaylistHeader
-                handleOpenPlaylistSettings={handleOpenPlaylistSettings}
-                playlist={playlist}
-            />
+    setSongs(newSongs);
+  };
 
-            <PlaylistSongs data={data} />
+  const { data: playlist, isLoading } = useQuery(
+    ["playlist", playlistId],
+    () => {
+      return axios.get(`/playlists/${playlistId}`);
+    },
+    {
+      select: (data) => {
+        const playlist: PlaylistType = data.data;
+        return playlist;
+      },
+      onSuccess: (data) => {
+        extractSongsFromOrderdSongs(data);
+      },
+    }
+  );
 
-            {/* <Menu
-                open={isSongSettingOpen}
-                anchorEl={songSettingsAnchorElement}
-                onClose={handleCloseSongSettings}
-                anchorOrigin={{
-                    horizontal: "center",
-                    vertical: "bottom",
-                }}
-                transformOrigin={{
-                    horizontal: "center",
-                    vertical: "top",
-                }}
-            >
-                <MenuItem>Скачать</MenuItem>
-                <MenuItem>Экспорт</MenuItem>
-            </Menu> */}
+  const {
+    anchorElement: playlistSettingsAnchorElement,
+    handleClose: handleClosePlaylistSettings,
+    handleOpen: handleOpenPlaylistSettings,
+    isOpen: isPlaylistSettingOpen,
+  } = useMenu();
 
-            <Menu
-                open={isPlaylistSettingOpen}
-                anchorEl={playlistSettingsAnchorElement}
-                onClose={handleClosePlaylistSettings}
-                anchorOrigin={{
-                    horizontal: "center",
-                    vertical: "bottom",
-                }}
-                transformOrigin={{
-                    horizontal: "center",
-                    vertical: "top",
-                }}
-            >
-                <MenuItem>Скачать</MenuItem>
-                <MenuItem>Экспорт</MenuItem>
-            </Menu>
-        </Stack>
-    );
-};
+  return (
+    <Stack
+      height="100%"
+      flexDirection="column"
+      bgcolor="custom.bg.main"
+      overflow="auto"
+    >
+      <PlaylistHeader
+        handleOpenPlaylistSettings={handleOpenPlaylistSettings}
+        playlist={playlist}
+        isLoading={isLoading}
+      />
+
+      <PlaylistSongs data={songs} isLoading={isLoading} />
+
+      <Menu
+        open={isPlaylistSettingOpen}
+        anchorEl={playlistSettingsAnchorElement}
+        onClose={handleClosePlaylistSettings}
+        anchorOrigin={{
+          horizontal: "center",
+          vertical: "bottom",
+        }}
+        transformOrigin={{
+          horizontal: "center",
+          vertical: "top",
+        }}
+      >
+        <MenuItem>Скачать</MenuItem>
+        <MenuItem>Экспорт</MenuItem>
+      </Menu>
+    </Stack>
+  );
+});
 
 export default PlaylistPage;

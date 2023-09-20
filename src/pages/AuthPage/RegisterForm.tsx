@@ -44,7 +44,6 @@ const RegisterForm = observer(() => {
           email: values.email,
         });
         setIsLoading(false);
-        console.log(res.status);
 
         authStore.setCredentials({
           email: values.email,

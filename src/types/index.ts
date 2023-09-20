@@ -1,9 +1,16 @@
 export interface SongType {
-  id: string;
-  title: string;
+  id: number;
+  name: string;
+  url: string;
   author: string;
-  album: string;
-  imageURL: string;
+  album: string | null;
+  image: ImageType;
+  owner: UserType;
+}
+
+export interface OrderedSongType {
+  order: number;
+  song: SongType;
 }
 
 export const enum RadioSubPage {
@@ -24,6 +31,7 @@ export interface PlaylistType {
   image: ImageType;
   owner: UserType;
   order: number;
+  songs: OrderedSongType[];
 }
 
 export interface OrderedPlaylist {

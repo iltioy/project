@@ -1,11 +1,11 @@
 import {
-    Grid,
-    Stack,
-    IconButton,
-    Box,
-    Typography,
-    Menu,
-    MenuItem,
+  Grid,
+  Stack,
+  IconButton,
+  Box,
+  Typography,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
@@ -14,146 +14,141 @@ import { SxProps, Theme } from "@mui/material";
 import useMenu from "../hooks/useMenu";
 
 interface SongRecordProps {
-    song: SongType;
+  song: SongType;
 
-    sx?: SxProps<Theme> | undefined;
-    search?: boolean;
+  sx?: SxProps<Theme> | undefined;
+  search?: boolean;
 }
 
 const SongRecord = ({ song, sx, search }: SongRecordProps) => {
-    const {
-        handleClose: handleCloseSongSettings,
-        handleOpen: handleOpenSongSettings,
-        isOpen: isSongSettingOpen,
-        anchorElement: songSettingsAnchorElement,
-    } = useMenu();
+  const {
+    handleClose: handleCloseSongSettings,
+    handleOpen: handleOpenSongSettings,
+    isOpen: isSongSettingOpen,
+    anchorElement: songSettingsAnchorElement,
+  } = useMenu();
 
-    return (
-        <>
-            <Stack
-                bgcolor="custom.bg.secondary"
+  return (
+    <>
+      <Stack
+        bgcolor="custom.bg.secondary"
+        sx={{
+          border: "1px solid grey",
+          height: "74px",
+          borderRadius: 1,
+          marginBottom: "5px",
+          ":last-child": {
+            marginBottom: 0,
+          },
+          flexDirection: "row",
+          alignItems: "center",
+          cursor: "pointer",
+          overflow: "hidden",
+          ...sx,
+        }}
+      >
+        <img
+          src={song.image.image_url}
+          style={{
+            height: "50px",
+            width: "50px",
+            objectFit: "cover",
+            borderRadius: "5px",
+            marginLeft: "12px",
+          }}
+          alt=""
+        />
+        <Grid
+          sx={{
+            height: "50px",
+            paddingLeft: "20px",
+            width: "calc(100% - 62px)",
+          }}
+          container
+        >
+          <Grid item xs={12} sm={8} md={6}>
+            <Typography
+              sx={{
+                fontWeight: "bold",
+
+                maxWidth: "100%",
+              }}
+              noWrap
+            >
+              {song.name.slice(0, 30)}
+              {song.name.length > 30 ? "..." : ""}
+            </Typography>
+            <Typography
+              variant="caption"
+              color={`${search ? "grey" : "text.secondary"}`}
+              maxWidth="100%"
+              display="block"
+              noWrap
+            >
+              {song.author}
+            </Typography>
+          </Grid>
+          <Grid
+            md={2}
+            display={{
+              xs: "none",
+              md: "block",
+            }}
+            overflow="hidden"
+            paddingRight="10px"
+            item
+          >
+            {song.album?.slice(0, 30)}
+          </Grid>
+
+          <Grid
+            item
+            md="auto"
+            justifySelf="flex-end"
+            marginLeft="auto"
+            marginRight="20px"
+            display={{
+              xs: "none",
+              sm: "block",
+            }}
+          >
+            <Box height="100%" display="flex" alignItems="center">
+              <IconButton>
+                <FavoriteBorderIcon htmlColor={`${search && "white"}`} />
+              </IconButton>
+
+              <IconButton
                 sx={{
-                    border: "1px solid grey",
-                    height: "74px",
-                    borderRadius: 1,
-                    marginBottom: "5px",
-                    ":last-child": {
-                        marginBottom: 0,
-                    },
-                    flexDirection: "row",
-                    alignItems: "center",
-                    cursor: "pointer",
-                    overflow: "hidden",
-                    ...sx,
+                  marginLeft: "15px",
                 }}
-            >
-                <img
-                    src={song.imageURL}
-                    style={{
-                        height: "50px",
-                        width: "50px",
-                        objectFit: "cover",
-                        borderRadius: "5px",
-                        marginLeft: "12px",
-                    }}
-                    alt=""
-                />
-                <Grid
-                    sx={{
-                        height: "50px",
-                        paddingLeft: "20px",
-                        width: "calc(100% - 62px)",
-                    }}
-                    container
-                >
-                    <Grid item xs={12} sm={8} md={6}>
-                        <Typography
-                            sx={{
-                                fontWeight: "bold",
-
-                                maxWidth: "100%",
-                            }}
-                            noWrap
-                        >
-                            {song.title.slice(0, 30)}
-                            {song.title.length > 30 ? "..." : ""}
-                        </Typography>
-                        <Typography
-                            variant="caption"
-                            color={`${search ? "grey" : "text.secondary"}`}
-                            maxWidth="100%"
-                            display="block"
-                            noWrap
-                        >
-                            {song.author}
-                        </Typography>
-                    </Grid>
-                    <Grid
-                        md={2}
-                        display={{
-                            xs: "none",
-                            md: "block",
-                        }}
-                        overflow="hidden"
-                        paddingRight="10px"
-                        item
-                    >
-                        {song.album.slice(0, 30)}
-                    </Grid>
-
-                    <Grid
-                        item
-                        md="auto"
-                        justifySelf="flex-end"
-                        marginLeft="auto"
-                        marginRight="20px"
-                        display={{
-                            xs: "none",
-                            sm: "block",
-                        }}
-                    >
-                        <Box height="100%" display="flex" alignItems="center">
-                            <IconButton>
-                                <FavoriteBorderIcon
-                                    htmlColor={`${search && "white"}`}
-                                />
-                            </IconButton>
-
-                            <IconButton
-                                sx={{
-                                    marginLeft: "15px",
-                                }}
-                                onClick={(e) =>
-                                    handleOpenSongSettings &&
-                                    handleOpenSongSettings(e)
-                                }
-                            >
-                                <MoreVertIcon
-                                    htmlColor={`${search && "white"}`}
-                                />
-                            </IconButton>
-                        </Box>
-                    </Grid>
-                </Grid>
-            </Stack>
-            <Menu
-                open={isSongSettingOpen}
-                anchorEl={songSettingsAnchorElement}
-                onClose={handleCloseSongSettings}
-                anchorOrigin={{
-                    horizontal: "center",
-                    vertical: "bottom",
-                }}
-                transformOrigin={{
-                    horizontal: "center",
-                    vertical: "top",
-                }}
-            >
-                <MenuItem>Скачать</MenuItem>
-                <MenuItem>Экспорт</MenuItem>
-            </Menu>
-        </>
-    );
+                onClick={(e) =>
+                  handleOpenSongSettings && handleOpenSongSettings(e)
+                }
+              >
+                <MoreVertIcon htmlColor={`${search && "white"}`} />
+              </IconButton>
+            </Box>
+          </Grid>
+        </Grid>
+      </Stack>
+      <Menu
+        open={isSongSettingOpen}
+        anchorEl={songSettingsAnchorElement}
+        onClose={handleCloseSongSettings}
+        anchorOrigin={{
+          horizontal: "center",
+          vertical: "bottom",
+        }}
+        transformOrigin={{
+          horizontal: "center",
+          vertical: "top",
+        }}
+      >
+        <MenuItem>Скачать</MenuItem>
+        <MenuItem>Экспорт</MenuItem>
+      </Menu>
+    </>
+  );
 };
 
 export default SongRecord;

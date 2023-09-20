@@ -16,19 +16,23 @@ export let playlist: PlaylistType = {
   id: 1,
   name: "Lorem ipsum dolor sit amet consectetur adipisicing elit.Aspernatur veniam eligendi quia odit quasi in, laborumsunt. Quos, aliquam? Autem unde ut porro rerum quoscorporis vel modi suscipit iure.",
   order: 1,
+  songs: [],
 };
 
 let data: SongType[] = [];
 
 for (let i = 0; i < 10; i++) {
   data.push({
-    id: faker.string.uuid(),
+    id: faker.number.int(100),
     album: faker.music.genre(),
     author: faker.person.fullName(),
-    imageURL: faker.image.url(),
+    image: {
+      image_url: faker.image.url(),
+    },
     // title: faker.music.songName(),
-    title:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit.Aspernatur veniam eligendi quia odit quasi in, laborumsunt. Quos, aliquam? Autem unde ut porro rerum quoscorporis vel modi suscipit iure.",
+    name: "Lorem ipsum dolor sit amet consectetur adipisicing elit.Aspernatur veniam eligendi quia odit quasi in, laborumsunt. Quos, aliquam? Autem unde ut porro rerum quoscorporis vel modi suscipit iure.",
+    owner: playlist.owner,
+    url: "askd",
   });
 }
 
@@ -50,6 +54,7 @@ for (let i = 0; i < 10; i++) {
     id: 1,
     name: "Lorem ipsum dolor sit amet consectetur adipisicing elit.Aspernatur veniam eligendi quia odit quasi in, laborumsunt. Quos, aliquam? Autem unde ut porro rerum quoscorporis vel modi suscipit iure.",
     order: 1,
+    songs: [],
   });
 }
 

@@ -4,6 +4,7 @@ import IosShareIcon from "@mui/icons-material/IosShare";
 import useHold from "../../hooks/useHold";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import { PlaylistType } from "../../types";
+import { useNavigate } from "react-router";
 
 const PlaylistItemIcons = () => {
   const { ref: favIconRef, scale: favIconScale } = useHold({
@@ -48,6 +49,9 @@ const PlaylistItemIcons = () => {
               width: "25px",
               height: "25px",
             }}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           />
         </Stack>
         <Stack
@@ -69,6 +73,9 @@ const PlaylistItemIcons = () => {
             sx={{
               width: "30px",
               height: "30px",
+            }}
+            onClick={(e) => {
+              e.stopPropagation();
             }}
           />
         </Stack>
@@ -95,6 +102,9 @@ const PlaylistItemIcons = () => {
               width: "25px",
               height: "25px",
             }}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
           />
         </Stack>
       </Stack>
@@ -107,6 +117,8 @@ interface PlaylisyItemProps {
 }
 
 const PlaylistItem: React.FC<PlaylisyItemProps> = ({ playlist }) => {
+  const navigate = useNavigate();
+
   return (
     <Stack
       sx={{
@@ -123,6 +135,9 @@ const PlaylistItem: React.FC<PlaylisyItemProps> = ({ playlist }) => {
         },
       }}
       color="text.primary"
+      onClick={() => {
+        navigate(`/${playlist.owner.username}/playlist/${playlist.id}`);
+      }}
     >
       <Stack
         className="hoverPlaylistItem"

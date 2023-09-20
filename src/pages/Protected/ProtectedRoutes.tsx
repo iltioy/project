@@ -5,7 +5,7 @@ import { Navigate, Outlet } from "react-router";
 const ProtectedRoutes = observer(() => {
   const { userStore } = useStores();
 
-  return userStore.access_token ? <Outlet /> : <Navigate to="/" />;
+  return userStore.access_token ? <Outlet /> : <Navigate to="/auth" />;
 });
 
 export default ProtectedRoutes;
