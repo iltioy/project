@@ -9,6 +9,7 @@ import { useParams } from "react-router";
 import { OrderedSongType, PlaylistType, SongType } from "../../types";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
+import Navbar from "../../components/Navbar";
 
 const PlaylistPage = observer(() => {
   const { playlistId } = useParams();
@@ -55,6 +56,7 @@ const PlaylistPage = observer(() => {
       bgcolor="custom.bg.main"
       overflow="auto"
     >
+      <Navbar />
       <PlaylistHeader
         handleOpenPlaylistSettings={handleOpenPlaylistSettings}
         playlist={playlist}
@@ -78,6 +80,7 @@ const PlaylistPage = observer(() => {
       >
         <MenuItem>Скачать</MenuItem>
         <MenuItem>Экспорт</MenuItem>
+        <MenuItem></MenuItem>
       </Menu>
     </Stack>
   );

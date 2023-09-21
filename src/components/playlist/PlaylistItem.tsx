@@ -6,11 +6,9 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import { PlaylistType } from "../../types";
 import { useNavigate, useParams } from "react-router";
-import axios from "axios";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../root-store-context";
-import { useQueryClient } from "react-query";
-import { useState } from "react";
+import { toggleFavoritePlaylist } from "../../queries/playlists";
 
 interface PlaylistItemIconsProps {
   playlist: PlaylistType;
@@ -28,33 +26,11 @@ const PlaylistItemIcons: React.FC<PlaylistItemIconsProps> = observer(
       initialScale: 1.15,
     });
 
-    const { userStore, playlistsStore } = useStores();
-    const queryClient = useQueryClient();
-
+    const { playlistsStore } = useStores();
     const { username } = useParams();
 
-    const handleToggleFavoritePlaylist = async () => {
-      try {
-        await axios.patch(
-          `/playlists/favorite/toggle/${playlist.id}`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${userStore.access_token}`,
-            },
-          }
-        );
-
-        playlistsStore.toggleLikedPlaylistId(playlist.id);
-
-        if (username) {
-          queryClient.invalidateQueries({
-            queryKey: ["playlists", username],
-          });
-        }
-      } catch (error) {
-        console.log(error);
-      }
+    const handleToggleFavoritePlaylist = () => {
+      toggleFavoritePlaylist(playlist.id, username);
     };
 
     return (

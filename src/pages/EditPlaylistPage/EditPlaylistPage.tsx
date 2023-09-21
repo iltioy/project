@@ -1,17 +1,30 @@
 import { Stack } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import EditPlaylistHeader from "./EditPlaylistHeader";
 import { observer } from "mobx-react-lite";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import axios from "axios";
-import { useParams } from "react-router";
-import { ImageType, PlaylistType } from "../../types";
+import { useNavigate, useParams } from "react-router";
+import {
+  ImageType,
+  OrderedSongType,
+  PlaylistType,
+  SongType,
+} from "../../types";
 import "../PlaylistPage/playlistPage.styles.css";
+import { useStores } from "../../root-store-context";
+import Navbar from "../../components/Navbar";
+import PlaylistSongs from "../PlaylistPage/PlaylistSongs";
 
 const EditPlaylistPage = observer(() => {
   const { playlistId } = useParams();
   const [playlistName, setPlaylistName] = useState("");
   const [playlistImage, setPlaylistImage] = useState<ImageType>({});
+  const [songs, setSongs] = useState<SongType[]>([]);
+
+  const { userStore } = useStores();
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data: playlist, isLoading } = useQuery(
     ["playlist", playlistId],
@@ -27,10 +40,55 @@ const EditPlaylistPage = observer(() => {
         if (playlistName === "" && !playlistImage.image_url) {
           setPlaylistName(data.name);
           setPlaylistImage(data.image);
+          extractSongsFromOrderdSongs(data);
         }
       },
     }
   );
+
+  const handleSaveChanges = async () => {
+    try {
+      if (!playlist) return;
+
+      await axios.patch(
+        `/playlists/update/${playlist.id}`,
+        {
+          name: playlistName,
+          image_url: playlistImage.image_url,
+          image_key: playlistImage.image_key,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userStore.access_token}`,
+          },
+        }
+      );
+
+      queryClient.invalidateQueries({
+        queryKey: ["playlist", playlist.id],
+      });
+      navigate(`/${playlist.owner.username}/playlist/${playlist.id}`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const extractSongsFromOrderdSongs = (playlist?: PlaylistType) => {
+    if (!playlist) return;
+    const orderedSongs: OrderedSongType[] = playlist.songs;
+    const newSongs: SongType[] = [];
+    orderedSongs.map((orderedSong) => {
+      newSongs.push(orderedSong.song);
+    });
+
+    setSongs(newSongs);
+  };
+
+  useEffect(() => {
+    if (playlist && userStore.user.username !== playlist.owner.username) {
+      navigate(`/${playlist.owner.username}/playlist/${playlist.id}`);
+    }
+  }, [userStore.user.username, playlist]);
 
   return (
     <>
@@ -40,6 +98,8 @@ const EditPlaylistPage = observer(() => {
         bgcolor="custom.bg.main"
         overflow="auto"
       >
+        <Navbar />
+
         <EditPlaylistHeader
           // playlist={playlist}
           isLoading={isLoading}
@@ -48,11 +108,12 @@ const EditPlaylistPage = observer(() => {
           setPlaylistName={setPlaylistName}
           playlistImage={playlistImage}
           setPlaylistImage={setPlaylistImage}
+          handleSaveChanges={handleSaveChanges}
         />
 
-        {/* <PlaylistSongs data={songs} isLoading={isLoading} />
+        <PlaylistSongs data={songs} isLoading={isLoading} />
 
-      <Menu
+        {/* <Menu
         open={isPlaylistSettingOpen}
         anchorEl={playlistSettingsAnchorElement}
         onClose={handleClosePlaylistSettings}

@@ -8,14 +8,14 @@ import RootStore from "./stores/root-stote";
 import "./utils/axios-global";
 import { QueryClientProvider, QueryClient } from "react-query";
 
-const queryClient = new QueryClient();
+export const appQueryClient = new QueryClient();
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
+    <QueryClientProvider client={appQueryClient}>
       <RootStoreContext.Provider value={new RootStore()}>
         <BrowserRouter>
           <App />

@@ -7,12 +7,17 @@ import {
   Skeleton,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import EditIcon from "@mui/icons-material/Edit";
 import { PlaylistType } from "../../types";
 import { useTheme } from "@mui/material/styles";
 import { observer } from "mobx-react-lite";
 import PressableButton from "../../components/MixSongsButton";
 import PlaylistImage from "../../components/playlist/PlaylistImage";
+import { useStores } from "../../root-store-context";
+import { useNavigate, useParams } from "react-router";
+import { toggleFavoritePlaylist } from "../../queries/playlists";
 
 interface PlaylistHeaderProps {
   playlist?: PlaylistType;
@@ -29,6 +34,15 @@ const PlaylistHeader = observer(
     isLoading,
   }: PlaylistHeaderProps) => {
     const theme = useTheme();
+    const navigate = useNavigate();
+    const { username } = useParams();
+
+    const handleToggleFavoritePlaylist = () => {
+      if (!playlist) return;
+      toggleFavoritePlaylist(playlist.id, username);
+    };
+
+    const { userStore, playlistsStore } = useStores();
 
     if (isLoading) {
       return (
@@ -59,6 +73,10 @@ const PlaylistHeader = observer(
           width: "100%",
           alignItems: "center",
           position: "relative",
+          height: {
+            xs: "200px",
+            md: "300px",
+          },
         }}
       >
         <Stack
@@ -83,80 +101,135 @@ const PlaylistHeader = observer(
             height: "100%",
             zIndex: 3,
           }}
-          flexDirection="row"
+          justifyContent="center"
         >
-          <PlaylistImage playlist={playlist} />
-
           <Stack
-            flexDirection="column"
-            paddingLeft="15px"
             sx={{
-              marginTop: {
-                xs: "37.5px",
-                md: "50px",
+              width: "100%",
+              height: {
+                xs: "125px",
+                md: "200px",
               },
-              overflow: "hidden",
-              flex: 1,
             }}
+            flexDirection="row"
           >
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: "bold",
-                fontSize: {
-                  xs: "20px",
-                  md: "40px",
-                },
-                // textShadow: "-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white",
-                textShadow: `1px 1px 10px ${
-                  theme.palette.mode === "dark" ? "black" : "white"
-                }`,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-              color="text.primary"
-            >
-              {playlist?.name}
-            </Typography>
-            <Typography
-              variant="caption"
-              sx={{
-                fontSize: {
-                  xs: "17px",
-                  md: "25px",
-                },
-                textShadow: `1px 1px 10px ${
-                  theme.palette.mode === "dark" ? "black" : "white"
-                }`,
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-              color="text.primary"
-            >
-              {playlist?.owner.username}
-            </Typography>
+            <PlaylistImage playlist={playlist} />
 
-            <Box
+            <Stack
+              flexDirection="column"
+              paddingLeft="15px"
               sx={{
-                marginBottom: {
-                  xs: "0px",
-                  md: "20px",
-                },
+                overflow: "hidden",
+                flex: 1,
               }}
             >
-              <IconButton>
-                <FavoriteBorderIcon color="warning" />
-              </IconButton>
-              <IconButton onClick={handleOpenPlaylistSettings}>
-                <MoreHorizIcon color="warning" />
-              </IconButton>
-            </Box>
+              <Typography
+                variant="h4"
+                sx={{
+                  fontWeight: "bold",
+                  fontSize: {
+                    xs: "20px",
+                    md: "40px",
+                  },
+                  // textShadow: "-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white",
+                  textShadow: `1px 1px 10px ${
+                    theme.palette.mode === "dark" ? "black" : "white"
+                  }`,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                color="text.primary"
+              >
+                {playlist?.name}
+              </Typography>
+              <Typography
+                variant="caption"
+                sx={{
+                  fontSize: {
+                    xs: "17px",
+                    md: "25px",
+                  },
+                  textShadow: `1px 1px 10px ${
+                    theme.palette.mode === "dark" ? "black" : "white"
+                  }`,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+                color="text.primary"
+              >
+                {playlist?.owner?.username}
+              </Typography>
 
-            <Box>
-              <PressableButton text="Перемешать" icon="play" />
-            </Box>
+              <Box
+                sx={{
+                  marginBottom: {
+                    xs: "0px",
+                    md: "20px",
+                  },
+                }}
+              >
+                {playlist &&
+                playlistsStore.user_liked_playlists_ids?.includes(
+                  playlist.id
+                ) ? (
+                  <IconButton onClick={() => handleToggleFavoritePlaylist()}>
+                    <FavoriteIcon
+                      sx={{
+                        fontSize: {
+                          xs: "17px",
+                          md: "24px",
+                        },
+                      }}
+                      color="warning"
+                    />
+                  </IconButton>
+                ) : (
+                  <IconButton onClick={() => handleToggleFavoritePlaylist()}>
+                    <FavoriteBorderIcon
+                      sx={{
+                        fontSize: {
+                          xs: "17px",
+                          md: "24px",
+                        },
+                      }}
+                      color="warning"
+                    />
+                  </IconButton>
+                )}
+
+                <IconButton onClick={handleOpenPlaylistSettings}>
+                  <MoreHorizIcon
+                    sx={{
+                      fontSize: {
+                        xs: "17px",
+                        md: "24px",
+                      },
+                    }}
+                    color="warning"
+                  />
+                </IconButton>
+                {playlist &&
+                playlist.owner?.username === userStore.user.username ? (
+                  <IconButton onClick={() => navigate("edit")}>
+                    <EditIcon
+                      sx={{
+                        fontSize: {
+                          xs: "17px",
+                          md: "24px",
+                        },
+                      }}
+                      color="warning"
+                    />
+                  </IconButton>
+                ) : null}
+              </Box>
+
+              <Box>
+                <PressableButton text="Перемешать" icon="play" />
+              </Box>
+            </Stack>
           </Stack>
         </Stack>
       </Stack>

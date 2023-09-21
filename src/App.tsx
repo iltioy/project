@@ -68,7 +68,7 @@ const lightTheme = createTheme({
 });
 
 const App = observer(() => {
-  const topRef = useRef<HTMLSpanElement | null>(null);
+  // const topRef = useRef<HTMLSpanElement | null>(null);
 
   const { userStore, playlistsStore } = useStores();
   const navigate = useNavigate();
@@ -146,8 +146,8 @@ const App = observer(() => {
   return (
     <Box component="div" bgcolor="custom.bg.main" className="App">
       <ThemeProvider theme={darkTheme}>
-        <span ref={topRef}></span>
-        <Navbar topRef={topRef} />
+        {/* <span ref={topRef}></span> */}
+        {/* <Navbar topRef={topRef} /> */}
 
         <SongTrack />
 

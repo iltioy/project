@@ -1,4 +1,11 @@
-import { Box, Skeleton, Stack, Typography, TextField } from "@mui/material";
+import {
+  Box,
+  Skeleton,
+  Stack,
+  Typography,
+  TextField,
+  Button,
+} from "@mui/material";
 import React, { useState } from "react";
 import { ImageType, PlaylistType } from "../../types";
 import { observer } from "mobx-react-lite";
@@ -18,6 +25,7 @@ interface EditPlaylistHeaderProps {
   setPlaylistName: React.Dispatch<React.SetStateAction<string>>;
   playlistImage: ImageType;
   setPlaylistImage: React.Dispatch<React.SetStateAction<ImageType>>;
+  handleSaveChanges: () => Promise<void>;
 }
 
 const EditPlaylistHeader: React.FC<EditPlaylistHeaderProps> = observer(
@@ -28,6 +36,7 @@ const EditPlaylistHeader: React.FC<EditPlaylistHeaderProps> = observer(
     setPlaylistName,
     playlistImage,
     setPlaylistImage,
+    handleSaveChanges,
   }) => {
     const theme = useTheme();
     const [isEditingPlaylistName, setIsEditingPlaylistName] = useState(false);
@@ -82,6 +91,10 @@ const EditPlaylistHeader: React.FC<EditPlaylistHeaderProps> = observer(
           width: "100%",
           alignItems: "center",
           position: "relative",
+          height: {
+            xs: "200px",
+            md: "300px",
+          },
         }}
       >
         <Stack
@@ -92,7 +105,9 @@ const EditPlaylistHeader: React.FC<EditPlaylistHeaderProps> = observer(
             top: 0,
             bottom: 0,
             zIndex: 2,
-            background: `url(${playlist?.image.image_url}) no-repeat center center fixed`,
+            background: `url(${
+              playlistImage?.image_url || playlist?.image.image_url
+            }) no-repeat center center fixed`,
             backgroundSize: "cover",
             filter: "blur(10px)",
           }}
@@ -106,84 +121,109 @@ const EditPlaylistHeader: React.FC<EditPlaylistHeaderProps> = observer(
             height: "100%",
             zIndex: 3,
           }}
-          flexDirection="row"
+          justifyContent="center"
         >
-          <PlaylistImage
-            isEdit={true}
-            playlistImage={playlistImage}
-            handleUploadPlaylistImage={handleUploadPlaylistImage}
-          />
-
           <Stack
-            flexDirection="column"
-            marginLeft="15px"
             sx={{
-              marginTop: {
-                xs: "37.5px",
-                md: "50px",
+              width: "100%",
+              height: {
+                xs: "125px",
+                md: "200px",
               },
-              overflow: "hidden",
-              flex: 1,
             }}
+            flexDirection="row"
           >
-            {!isEditingPlaylistName ? (
+            <PlaylistImage
+              isEdit={true}
+              playlistImage={playlistImage}
+              handleUploadPlaylistImage={handleUploadPlaylistImage}
+            />
+
+            <Stack
+              flexDirection="column"
+              marginLeft="15px"
+              sx={{
+                overflow: "hidden",
+                flex: 1,
+              }}
+            >
+              {!isEditingPlaylistName ? (
+                <Typography
+                  variant="h4"
+                  sx={{
+                    fontWeight: "bold",
+                    fontSize: {
+                      xs: "20px",
+                      md: "40px",
+                    },
+                    // textShadow: "-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white",
+                    textShadow: `1px 1px 10px ${
+                      theme.palette.mode === "dark" ? "black" : "white"
+                    }`,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    cursor: "pointer",
+                  }}
+                  color="text.primary"
+                  onClick={() => setIsEditingPlaylistName(true)}
+                >
+                  {playlistName}
+                </Typography>
+              ) : (
+                <TextField
+                  variant="standard"
+                  size="medium"
+                  sx={{
+                    fontWeight: "bold",
+                    // textShadow: "-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white",
+                    textShadow: `1px 1px 10px ${
+                      theme.palette.mode === "dark" ? "black" : "white"
+                    }`,
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    display: "inline-block",
+                    input: {
+                      fontSize: {
+                        xs: "17px",
+                        md: "37px",
+                      },
+                      fontWeight: "bold",
+                    },
+                  }}
+                  value={playlistName}
+                  onChange={(e) => setPlaylistName(e.target.value)}
+                  onBlur={() => {
+                    if (playlistName === "" && playlist) {
+                      setPlaylistName(playlist.name);
+                    }
+                    setIsEditingPlaylistName(false);
+                  }}
+                  autoFocus
+                />
+              )}
+
               <Typography
-                variant="h4"
+                variant="caption"
                 sx={{
-                  fontWeight: "bold",
                   fontSize: {
-                    xs: "20px",
-                    md: "40px",
+                    xs: "17px",
+                    md: "25px",
                   },
-                  // textShadow: "-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white",
                   textShadow: `1px 1px 10px ${
                     theme.palette.mode === "dark" ? "black" : "white"
                   }`,
                   overflow: "hidden",
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
-                  cursor: "pointer",
                 }}
                 color="text.primary"
-                onClick={() => setIsEditingPlaylistName(true)}
               >
-                {playlistName}
+                {playlist?.owner.username}
               </Typography>
-            ) : (
-              <TextField
-                variant="standard"
-                size="medium"
-                sx={{
-                  fontWeight: "bold",
-                  // textShadow: "-1px 0 white, 0 1px white, 1px 0 white, 0 -1px white",
-                  textShadow: `1px 1px 10px ${
-                    theme.palette.mode === "dark" ? "black" : "white"
-                  }`,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  display: "inline-block",
-                  input: {
-                    fontSize: {
-                      xs: "17px",
-                      md: "37px",
-                    },
-                    fontWeight: "bold",
-                  },
-                }}
-                value={playlistName}
-                onChange={(e) => setPlaylistName(e.target.value)}
-                onBlur={() => {
-                  if (playlistName === "" && playlist) {
-                    setPlaylistName(playlist.name);
-                  }
-                  setIsEditingPlaylistName(false);
-                }}
-                autoFocus
-              />
-            )}
 
-            {/* <Box
+              {/* <Box
               sx={{
                 marginBottom: {
                   xs: "0px",
@@ -199,9 +239,13 @@ const EditPlaylistHeader: React.FC<EditPlaylistHeaderProps> = observer(
               </IconButton>
             </Box> */}
 
-            <Box marginTop="15px">
-              <PressableButton text="Сохранить" />
-            </Box>
+              <Box marginTop="10px" onClick={() => handleSaveChanges()}>
+                {/* <PressableButton text="Сохранить" /> */}
+                <Button variant="contained" color="secondary">
+                  Сохранить
+                </Button>
+              </Box>
+            </Stack>
           </Stack>
         </Stack>
       </Stack>

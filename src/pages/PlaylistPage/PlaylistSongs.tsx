@@ -46,7 +46,7 @@ const PlaylistSongs = ({ data, isLoading }: PlaylistSongsProps) => {
             <Grid item xs={12}>
               <Skeleton />
             </Grid>
-          ) : (
+          ) : data?.length > 0 ? (
             <>
               <Grid item xs={12} md={6}>
                 Название
@@ -55,7 +55,7 @@ const PlaylistSongs = ({ data, isLoading }: PlaylistSongsProps) => {
                 Альбом
               </Grid>
             </>
-          )}
+          ) : null}
         </Grid>
 
         {isLoading

@@ -1,9 +1,27 @@
 import { useNavigate } from "react-router";
 import { Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
+import { useMutation } from "react-query";
+import {
+  createPlaylistQuery,
+  useCreatePlaylist,
+} from "../../queries/playlists";
+import { observer } from "mobx-react-lite";
+import { PlaylistType } from "../../types";
 
-const CreatePlaylistItem = () => {
+const CreatePlaylistItem = observer(() => {
   const navigate = useNavigate();
+
+  const { isLoading, mutate: createPlaylist } = useMutation(
+    createPlaylistQuery,
+    {
+      onSuccess: (data) => {
+        const playlist: PlaylistType = data.data;
+        if (!playlist) return;
+        navigate(`/${playlist.owner?.username}/playlist/${playlist.id}/edit`);
+      },
+    }
+  );
 
   return (
     <Stack
@@ -15,15 +33,11 @@ const CreatePlaylistItem = () => {
         alignItems: "center",
         position: "relative",
         zIndex: 1,
-        cursor: "pointer",
         ":hover .hoverPlaylistItem": {
           color: "#7E7F7F",
         },
       }}
       color="text.primary"
-      onClick={() => {
-        navigate(`/playlist/create`);
-      }}
     >
       <Stack
         sx={{
@@ -40,6 +54,12 @@ const CreatePlaylistItem = () => {
             marginBottom: "5px",
             position: "relative",
             backgroundColor: "#F6F8F9",
+            cursor: isLoading ? "" : "pointer",
+          }}
+          onClick={() => {
+            if (!isLoading) {
+              createPlaylist();
+            }
           }}
         >
           <Stack
@@ -88,6 +108,6 @@ const CreatePlaylistItem = () => {
       </Stack>
     </Stack>
   );
-};
+});
 
 export default CreatePlaylistItem;

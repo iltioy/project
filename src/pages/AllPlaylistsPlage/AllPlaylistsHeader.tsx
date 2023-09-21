@@ -91,7 +91,11 @@ const AllPlaylistsHeader = observer(() => {
             {userStore.user.username}
           </Typography>
 
-          <Box>
+          <Box
+            onClick={() => {
+              window.scrollTo({ top: 0, behavior: "smooth" });
+            }}
+          >
             <PressableButton text="Перемешать" icon="play" />
           </Box>
         </Stack>

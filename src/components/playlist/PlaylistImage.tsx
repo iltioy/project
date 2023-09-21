@@ -25,14 +25,6 @@ const PlaylistImage: React.FC<PlaylistImageProps> = observer(
             xs: "125px",
             md: "200px",
           },
-          marginTop: {
-            xs: "37.5px",
-            md: "50px",
-          },
-          marginBottom: {
-            xs: "37.5px",
-            md: "50px",
-          },
           borderRadius: "5px",
           objectFit: "cover",
           ":hover .hoverPlaylistImage": {

@@ -8,6 +8,7 @@ import { useStores } from "../../root-store-context";
 import { useQuery } from "react-query";
 import { useParams } from "react-router";
 import axios from "axios";
+import Navbar from "../../components/Navbar";
 
 const AllPlaylistsPage = observer(() => {
   const { playlistsStore } = useStores();
@@ -39,6 +40,7 @@ const AllPlaylistsPage = observer(() => {
       }}
       color="text.primary"
     >
+      <Navbar />
       <AllPlaylistsHeader />
 
       <Stack width="100%" alignItems="center">
