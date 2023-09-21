@@ -6,14 +6,13 @@ import {
   Button,
   Skeleton,
 } from "@mui/material";
-
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { PlaylistType } from "../../types";
 import { useTheme } from "@mui/material/styles";
-import MixSongsButton from "../../components/MixSongsButton";
 import { observer } from "mobx-react-lite";
+import PressableButton from "../../components/MixSongsButton";
+import PlaylistImage from "../../components/playlist/PlaylistImage";
 
 interface PlaylistHeaderProps {
   playlist?: PlaylistType;
@@ -86,11 +85,7 @@ const PlaylistHeader = observer(
           }}
           flexDirection="row"
         >
-          <img
-            src={playlist?.image.image_url}
-            alt=""
-            className="playlistImage"
-          />
+          <PlaylistImage playlist={playlist} />
 
           <Stack
             flexDirection="column"
@@ -101,6 +96,7 @@ const PlaylistHeader = observer(
                 md: "50px",
               },
               overflow: "hidden",
+              flex: 1,
             }}
           >
             <Typography
@@ -159,7 +155,7 @@ const PlaylistHeader = observer(
             </Box>
 
             <Box>
-              <MixSongsButton />
+              <PressableButton text="Перемешать" icon="play" />
             </Box>
           </Stack>
         </Stack>

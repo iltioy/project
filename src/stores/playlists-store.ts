@@ -20,7 +20,7 @@ class PlaylistsStore {
       data?.added_playlists;
     let added_playlists: PlaylistType[] = [];
     if (!ordered_added_playlists) return;
-    ordered_added_playlists?.map((orderedPlaylist) => {
+    ordered_added_playlists?.forEach((orderedPlaylist) => {
       added_playlists.push(orderedPlaylist.playlist);
     });
 
@@ -32,7 +32,7 @@ class PlaylistsStore {
       data?.liked_playlists;
     if (!ordered_liked_playlists) return;
     let liked_playlists: PlaylistType[] = [];
-    ordered_liked_playlists?.map((orderedPlaylist) => {
+    ordered_liked_playlists?.forEach((orderedPlaylist) => {
       liked_playlists.push(orderedPlaylist.playlist);
     });
 
@@ -43,24 +43,24 @@ class PlaylistsStore {
     const ordered_added_playlists: OrderedPlaylist[] | undefined =
       data?.added_playlists;
     let added_playlists: PlaylistType[] = [];
-    ordered_added_playlists?.map((orderedPlaylist) => {
+    ordered_added_playlists?.forEach((orderedPlaylist) => {
       added_playlists.push(orderedPlaylist.playlist);
     });
 
     const ordered_liked_playlists: OrderedPlaylist[] | undefined =
       data?.liked_playlists;
     let liked_playlists: PlaylistType[] = [];
-    ordered_liked_playlists?.map((orderedPlaylist) => {
+    ordered_liked_playlists?.forEach((orderedPlaylist) => {
       liked_playlists.push(orderedPlaylist.playlist);
     });
 
     let added_playlists_ids: number[] = [];
     let liked_playlists_ids: number[] = [];
-    added_playlists.map((el) => {
+    added_playlists.forEach((el) => {
       added_playlists_ids.push(el.id);
     });
 
-    liked_playlists.map((el) => {
+    liked_playlists.forEach((el) => {
       liked_playlists_ids.push(el.id);
     });
 

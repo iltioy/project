@@ -20,6 +20,7 @@ import ConfirmEmail from "./pages/AuthPage/ConfirmEmail";
 import RecoverPasswordRequest from "./pages/AuthPage/PasswordRecovery/RecoverPasswordRequest";
 import RecoverPassword from "./pages/AuthPage/PasswordRecovery/RecoverPassword";
 import { ReactQueryDevtools } from "react-query/devtools";
+import EditPlaylistPage from "./pages/EditPlaylistPage/EditPlaylistPage";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -135,7 +136,7 @@ const App = observer(() => {
     refreshTokens();
     const intervalId = setInterval(() => {
       refreshTokens();
-    }, 1000 * 60 * 4);
+    }, 1000 * 10);
 
     return () => {
       clearInterval(intervalId);
@@ -169,6 +170,10 @@ const App = observer(() => {
             <Route
               path="/:username/playlist/:playlistId"
               element={<PlaylistPage />}
+            />
+            <Route
+              path="/:username/playlist/:playlistId/edit"
+              element={<EditPlaylistPage />}
             />
             <Route path="/:username/playlists" element={<AllPlaylistsPage />} />
             <Route path="/radio" element={<RadioPage />} />
