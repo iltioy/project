@@ -14,6 +14,7 @@ import PressableButton from "../../components/MixSongsButton";
 import PlaylistImage from "../../components/playlist/PlaylistImage";
 import axios from "axios";
 import { useStores } from "../../root-store-context";
+import { handleUploadImage } from "../../queries/files";
 
 interface EditPlaylistHeaderProps {
   playlist?: PlaylistType;
@@ -40,26 +41,11 @@ const EditPlaylistHeader: React.FC<EditPlaylistHeaderProps> = observer(
   }) => {
     const theme = useTheme();
     const [isEditingPlaylistName, setIsEditingPlaylistName] = useState(false);
-    const { userStore } = useStores();
 
     const handleUploadPlaylistImage = async (file: File) => {
-      try {
-        if (!file) return;
-
-        let formData = new FormData();
-        formData.append("image", file);
-
-        const res = await axios.post("/files/image/upload", formData, {
-          headers: {
-            Authorization: `Bearer ${userStore.access_token}`,
-          },
-        });
-        const image: ImageType = res.data;
-
-        setPlaylistImage(image);
-      } catch (error) {
-        console.log(error);
-      }
+      const image = await handleUploadImage(file);
+      if (!image) return;
+      setPlaylistImage(image);
     };
 
     if (isLoading) {

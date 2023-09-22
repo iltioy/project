@@ -14,7 +14,7 @@ import SearchWindow from "./modals/SearchWindow";
 import { useNavigate } from "react-router";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../root-store-context";
-import SongUploadModal from "./modals/SongUploadModal";
+import SongUploadModal from "./modals/SongUploadModal/SongUploadModal";
 
 interface NavbarProps {
   topRef?: React.MutableRefObject<HTMLSpanElement | null>;
@@ -33,7 +33,7 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
   console.log("Navbar rendered!");
 
   const ref = useRef<HTMLDivElement | null>(null);
-  const { userStore } = useStores();
+  const { userStore, modalsStore } = useStores();
 
   if (location.pathname.startsWith("/auth")) {
     return <></>;
@@ -111,6 +111,13 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
             >
               Мои плейлисты
             </Button>
+
+            <Button
+              color="inherit"
+              onClick={() => modalsStore.toggleSongUploadModal()}
+            >
+              Загрузить трек
+            </Button>
           </Stack>
 
           <Stack
@@ -155,8 +162,6 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
         {isSearchOpened && (
           <SearchWindow setIsSearchOpened={setIsSearchOpened} />
         )}
-
-        <SongUploadModal />
       </AppBar>
     </>
   );

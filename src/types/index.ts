@@ -45,3 +45,11 @@ export interface UserType {
   role?: string;
   image?: ImageType;
 }
+
+export interface CreateSongBody {
+  name: string;
+  url: string;
+  author: string;
+  album?: string;
+  image?: ImageType;
+}

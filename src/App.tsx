@@ -2,8 +2,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import AuthPage from "./pages/AuthPage/AuthPage";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import PlaylistPage from "./pages/PlaylistPage/PlaylistPage";
-import Navbar from "./components/Navbar";
-import { useRef } from "react";
+// import Navbar from "./components/Navbar";
+// import { useRef } from "react";
 import AllPlaylistsPage from "./pages/AllPlaylistsPlage/AllPlaylistsPage";
 import RadioPage from "./pages/RadioPage/RadioPage";
 import { Box } from "@mui/material";
@@ -21,6 +21,7 @@ import RecoverPasswordRequest from "./pages/AuthPage/PasswordRecovery/RecoverPas
 import RecoverPassword from "./pages/AuthPage/PasswordRecovery/RecoverPassword";
 import { ReactQueryDevtools } from "react-query/devtools";
 import EditPlaylistPage from "./pages/EditPlaylistPage/EditPlaylistPage";
+import SongUploadModal from "./components/modals/SongUploadModal/SongUploadModal";
 
 const dark = false;
 const darkTheme = createTheme({
@@ -70,7 +71,7 @@ const lightTheme = createTheme({
 const App = observer(() => {
   // const topRef = useRef<HTMLSpanElement | null>(null);
 
-  const { userStore, playlistsStore } = useStores();
+  const { userStore, playlistsStore, modalsStore } = useStores();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -148,6 +149,8 @@ const App = observer(() => {
       <ThemeProvider theme={darkTheme}>
         {/* <span ref={topRef}></span> */}
         {/* <Navbar topRef={topRef} /> */}
+
+        <>{modalsStore.isSongUploadModalActive && <SongUploadModal />}</>
 
         <SongTrack />
 
