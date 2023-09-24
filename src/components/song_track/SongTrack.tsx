@@ -11,7 +11,7 @@ import SongProgress from "./SongProgress";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../root-store-context";
 import { toggleLikeSong } from "../../queries/songs";
-import useSound from "use-sound";
+// import useSound from "use-sound";
 
 const audio = new Audio();
 
@@ -23,10 +23,9 @@ const SongTrack = observer(() => {
   const { songsStore } = useStores();
   const { current_song } = songsStore;
 
-  const [play, { sound, duration }] = useSound(
-    songsStore.current_song?.url || ""
-  );
-  console.log(sound, duration);
+  // const [play, { sound, duration }] = useSound(
+  //   songsStore.current_song?.url || ""
+  // );
 
   const handlePlayMusic = () => {
     if (audio.paused && !isAudioPlaying) {
