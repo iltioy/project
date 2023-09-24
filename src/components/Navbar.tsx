@@ -30,7 +30,7 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [isSearchOpened, setIsSearchOpened] = useState(false);
 
-  console.log("Navbar rendered!");
+  // console.log("Navbar rendered!");
 
   const ref = useRef<HTMLDivElement | null>(null);
   const { userStore, modalsStore } = useStores();

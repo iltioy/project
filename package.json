@@ -20,6 +20,7 @@
     "formik": "^2.4.2",
     "mobx": "^6.10.2",
     "mobx-react-lite": "^4.0.4",
+    "path-browserify": "^1.0.1",
     "react": "^18.2.0",
     "react-code-input": "^3.10.1",
     "react-dom": "^18.2.0",
@@ -31,6 +32,7 @@
     "react-scripts": "5.0.1",
     "react-tilt": "^1.0.2",
     "typescript": "^4.9.5",
+    "use-sound": "^4.0.1",
     "web-vitals": "^2.1.4",
     "yup": "^1.2.0"
   },
@@ -59,6 +61,7 @@
     ]
   },
   "devDependencies": {
+    "@types/path-browserify": "^1.0.0",
     "@types/react-router-dom": "^5.3.3",
     "tailwindcss": "^3.3.2"
   }

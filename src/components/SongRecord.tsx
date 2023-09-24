@@ -8,10 +8,14 @@ import {
   MenuItem,
 } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { SongType } from "../types";
 import { SxProps, Theme } from "@mui/material";
 import useMenu from "../hooks/useMenu";
+import { observer } from "mobx-react-lite";
+import { useStores } from "../root-store-context";
+import { toggleLikeSong } from "../queries/songs";
 
 interface SongRecordProps {
   song: SongType;
@@ -20,13 +24,15 @@ interface SongRecordProps {
   search?: boolean;
 }
 
-const SongRecord = ({ song, sx, search }: SongRecordProps) => {
+const SongRecord = observer(({ song, sx, search }: SongRecordProps) => {
   const {
     handleClose: handleCloseSongSettings,
     handleOpen: handleOpenSongSettings,
     isOpen: isSongSettingOpen,
     anchorElement: songSettingsAnchorElement,
   } = useMenu();
+
+  const { songsStore } = useStores();
 
   return (
     <>
@@ -46,13 +52,14 @@ const SongRecord = ({ song, sx, search }: SongRecordProps) => {
           overflow: "hidden",
           ...sx,
         }}
+        onClick={() => songsStore.setCurrentSong(song)}
       >
         <img
           src={song.image.image_url}
           style={{
             height: "50px",
             width: "50px",
-            objectFit: "cover",
+            objectFit: "fill",
             borderRadius: "5px",
             marginLeft: "12px",
           }}
@@ -113,17 +120,34 @@ const SongRecord = ({ song, sx, search }: SongRecordProps) => {
             }}
           >
             <Box height="100%" display="flex" alignItems="center">
-              <IconButton>
-                <FavoriteBorderIcon htmlColor={`${search && "white"}`} />
-              </IconButton>
+              {songsStore.liked_songs_ids?.includes(song.id) ? (
+                <IconButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleLikeSong(song.id);
+                  }}
+                >
+                  <FavoriteIcon htmlColor={`${search && "white"}`} />
+                </IconButton>
+              ) : (
+                <IconButton
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleLikeSong(song.id);
+                  }}
+                >
+                  <FavoriteBorderIcon htmlColor={`${search && "white"}`} />
+                </IconButton>
+              )}
 
               <IconButton
                 sx={{
                   marginLeft: "15px",
                 }}
-                onClick={(e) =>
-                  handleOpenSongSettings && handleOpenSongSettings(e)
-                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleOpenSongSettings && handleOpenSongSettings(e);
+                }}
               >
                 <MoreVertIcon htmlColor={`${search && "white"}`} />
               </IconButton>
@@ -149,6 +173,6 @@ const SongRecord = ({ song, sx, search }: SongRecordProps) => {
       </Menu>
     </>
   );
-};
+});
 
 export default SongRecord;

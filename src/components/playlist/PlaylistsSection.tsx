@@ -53,9 +53,9 @@ const PlaylistsSection: React.FC<PlaylistsSectionProps> = observer(
                   return (
                     <>
                       <Grid item key={index}>
-                        <PlaylistItem key={index} playlist={playlist} />
+                        <PlaylistItem playlist={playlist} />
                       </Grid>
-                      <Grid item>
+                      <Grid item key="createPlaylistItem">
                         <CreatePlaylistItem />
                       </Grid>
                     </>
@@ -64,7 +64,7 @@ const PlaylistsSection: React.FC<PlaylistsSectionProps> = observer(
 
                 return (
                   <Grid item key={index}>
-                    <PlaylistItem key={index} playlist={playlist} />
+                    <PlaylistItem playlist={playlist} />
                   </Grid>
                 );
               })}

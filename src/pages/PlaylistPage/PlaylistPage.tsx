@@ -39,6 +39,7 @@ const PlaylistPage = observer(() => {
       onSuccess: (data) => {
         extractSongsFromOrderdSongs(data);
       },
+      refetchOnWindowFocus: false,
     }
   );
 

@@ -40,9 +40,10 @@ const EditPlaylistPage = observer(() => {
         if (playlistName === "" && !playlistImage.image_url) {
           setPlaylistName(data.name);
           setPlaylistImage(data.image);
-          extractSongsFromOrderdSongs(data);
         }
+        extractSongsFromOrderdSongs(data);
       },
+      refetchOnWindowFocus: false,
     }
   );
 
@@ -111,7 +112,7 @@ const EditPlaylistPage = observer(() => {
           handleSaveChanges={handleSaveChanges}
         />
 
-        <PlaylistSongs data={songs} isLoading={isLoading} />
+        <PlaylistSongs isEdit data={songs} isLoading={isLoading} />
 
         {/* <Menu
         open={isPlaylistSettingOpen}

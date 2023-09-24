@@ -27,6 +27,7 @@ const AllPlaylistsPage = observer(() => {
         playlistsStore.setLikedPlaylists(data);
         playlistsStore.setAddedPlaylists(data);
       },
+      refetchOnWindowFocus: false,
     }
   );
 

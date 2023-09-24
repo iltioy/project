@@ -79,7 +79,7 @@ const PlaylistImage: React.FC<PlaylistImageProps> = observer(
         <img
           src={playlist?.image.image_url || playlistImage?.image_url}
           alt=""
-          style={{ width: "200px", height: "200px" }}
+          style={{ width: "200px", height: "200px", objectFit: "cover" }}
         />
       </Stack>
     );

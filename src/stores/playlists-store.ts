@@ -1,5 +1,6 @@
 import { makeAutoObservable } from "mobx";
 import { OrderedPlaylist, PlaylistType } from "../types";
+import songsStore from "./songs-store";
 
 class PlaylistsStore {
   added_playlists: PlaylistType[] = [];
@@ -10,6 +11,8 @@ class PlaylistsStore {
 
   user_added_playlists_ids: number[] = [];
   user_liked_playlists_ids: number[] = [];
+
+  user_favorite_playlist?: PlaylistType | undefined;
 
   constructor() {
     makeAutoObservable(this);
@@ -64,6 +67,8 @@ class PlaylistsStore {
       liked_playlists_ids.push(el.id);
     });
 
+    this.setFavoritePlaylist(added_playlists);
+
     this.user_added_playlists = added_playlists;
     this.user_liked_playlists = liked_playlists;
 
@@ -80,6 +85,22 @@ class PlaylistsStore {
       (playlistId) => playlistId !== id
     );
     this.user_liked_playlists_ids = newUserLikedPlaylistIds;
+  }
+
+  setFavoritePlaylist(playlists: PlaylistType[]) {
+    let favoritePlaylist: PlaylistType | undefined;
+
+    playlists.forEach((el: PlaylistType) => {
+      if (el.is_favorite) {
+        favoritePlaylist = el;
+      }
+    });
+
+    this.user_favorite_playlist = favoritePlaylist;
+
+    if (favoritePlaylist) {
+      songsStore.setLikedSongsIds(favoritePlaylist);
+    }
   }
 }
 
