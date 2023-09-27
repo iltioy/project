@@ -1,5 +1,5 @@
 import { Grid, Stack, Skeleton } from "@mui/material";
-import { SongType } from "../../types";
+import { PlaylistType, SongType } from "../../types";
 import SongRecord from "../../components/SongRecord";
 import { observer } from "mobx-react-lite";
 import { useStores } from "../../root-store-context";
@@ -9,10 +9,11 @@ interface PlaylistSongsProps {
   data: SongType[];
   isLoading?: boolean;
   isEdit?: boolean;
+  playlist?: PlaylistType;
 }
 
 const PlaylistSongs = observer(
-  ({ data, isLoading, isEdit }: PlaylistSongsProps) => {
+  ({ data, isLoading, isEdit, playlist }: PlaylistSongsProps) => {
     return (
       <Stack
         sx={{
@@ -73,7 +74,9 @@ const PlaylistSongs = observer(
                 );
               })
             : data.map((song: SongType, index: number) => {
-                return <SongRecord song={song} key={index} />;
+                return (
+                  <SongRecord songContext={playlist} song={song} key={index} />
+                );
               })}
         </Stack>
       </Stack>

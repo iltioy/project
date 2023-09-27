@@ -153,7 +153,7 @@ const App = observer(() => {
 
   return (
     <Box component="div" bgcolor="custom.bg.main" className="App">
-      <ThemeProvider theme={lightTheme}>
+      <ThemeProvider theme={darkTheme}>
         {/* <span ref={topRef}></span> */}
         {/* <Navbar topRef={topRef} /> */}
 
@@ -165,7 +165,7 @@ const App = observer(() => {
           />
         </>
 
-        <SongTrack />
+        {songsStore.current_song && <SongTrack />}
 
         <Routes>
           <Route path="/auth" element={<AuthPage />}>

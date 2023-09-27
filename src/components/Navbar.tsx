@@ -130,6 +130,9 @@ const Navbar = observer(({ topRef }: NavbarProps) => {
               zIndex: 11,
             }}
             flex={`${isSearchOpened ? "1" : "unset"}`}
+            sx={{
+              display: isSearchOpened ? "none" : "flex",
+            }}
           >
             <SearchIcon
               htmlColor={isSearchOpened ? "#ffffff" : themeColor}

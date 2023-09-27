@@ -29,7 +29,7 @@ const SongTrack = observer(() => {
 
   const handlePlayMusic = () => {
     if (audio.paused && !isAudioPlaying) {
-      audio.play();
+      audio.play().catch((error) => console.log(error));
     }
     setIsAudioPlaying(true);
   };
@@ -66,9 +66,7 @@ const SongTrack = observer(() => {
 
     audio.oncanplay = () => {
       console.log("canplay!");
-      if (isAudioPlaying && audio.paused) {
-        audio.play();
-      }
+      audio.play().catch((error) => console.log(error));
     };
 
     audio.onplaying = () => {
@@ -99,7 +97,7 @@ const SongTrack = observer(() => {
         bgcolor="custom.bg.main"
         borderTop="1px solid grey"
         width="100%"
-        zIndex={3}
+        zIndex={201}
         height="70px"
         alignItems="center"
         className="noselect"
@@ -166,6 +164,7 @@ const SongTrack = observer(() => {
                   color: "#424242",
                 },
               }}
+              onClick={() => songsStore.setCurrentSongToNextInQueue()}
             />
           </Stack>
 

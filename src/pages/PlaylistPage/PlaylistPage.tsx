@@ -64,7 +64,7 @@ const PlaylistPage = observer(() => {
         isLoading={isLoading}
       />
 
-      <PlaylistSongs data={songs} isLoading={isLoading} />
+      <PlaylistSongs playlist={playlist} data={songs} isLoading={isLoading} />
 
       <Menu
         open={isPlaylistSettingOpen}

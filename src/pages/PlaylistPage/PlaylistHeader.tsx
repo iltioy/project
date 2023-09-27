@@ -42,7 +42,7 @@ const PlaylistHeader = observer(
       toggleFavoritePlaylist(playlist.id, username);
     };
 
-    const { userStore, playlistsStore } = useStores();
+    const { userStore, playlistsStore, songsStore } = useStores();
 
     if (isLoading) {
       return (
@@ -226,7 +226,14 @@ const PlaylistHeader = observer(
                 ) : null}
               </Box>
 
-              <Box>
+              <Box
+                onClick={() => {
+                  if (playlist) {
+                    songsStore.setSongQueue(playlist);
+                    songsStore.shuffleSongQueue();
+                  }
+                }}
+              >
                 <PressableButton text="Перемешать" icon="play" />
               </Box>
             </Stack>
