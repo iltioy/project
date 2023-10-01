@@ -77,6 +77,7 @@ const PlaylistHeader = observer(
             xs: "200px",
             md: "300px",
           },
+          // paddingBottom: "50px",
         }}
       >
         <Stack

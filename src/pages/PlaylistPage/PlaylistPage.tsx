@@ -56,16 +56,19 @@ const PlaylistPage = observer(() => {
       flexDirection="column"
       bgcolor="custom.bg.main"
       overflow="auto"
+      paddingBottom="50px"
     >
       <Navbar />
-      <PlaylistHeader
-        handleOpenPlaylistSettings={handleOpenPlaylistSettings}
-        playlist={playlist}
-        isLoading={isLoading}
-      />
 
-      <PlaylistSongs playlist={playlist} data={songs} isLoading={isLoading} />
+      <Stack flexDirection="column">
+        <PlaylistHeader
+          handleOpenPlaylistSettings={handleOpenPlaylistSettings}
+          playlist={playlist}
+          isLoading={isLoading}
+        />
 
+        <PlaylistSongs playlist={playlist} data={songs} isLoading={isLoading} />
+      </Stack>
       <Menu
         open={isPlaylistSettingOpen}
         anchorEl={playlistSettingsAnchorElement}

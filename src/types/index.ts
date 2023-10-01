@@ -3,7 +3,7 @@ export interface SongType {
   name: string;
   url: string;
   author: string;
-  album: string | null;
+  album?: string;
   image: ImageType;
   owner: UserType;
 }

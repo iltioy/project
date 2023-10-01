@@ -18,9 +18,9 @@ const PlaylistSongs = observer(
       <Stack
         sx={{
           width: "100%",
-          paddingY: "50px",
           display: "flex",
           alignItems: "center",
+          marginTop: "50px",
         }}
         color="text.primary"
       >

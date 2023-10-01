@@ -67,3 +67,7 @@ code {
 .searchWindowScroll::-webkit-scrollbar {
   display: none;
 }
+
+.noScroll::-webkit-scrollbar {
+  display: none;
+}

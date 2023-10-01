@@ -17,64 +17,105 @@ import { useStores } from "../../../root-store-context";
 import { useFormik } from "formik";
 import { addSongToPlaylist } from "../../../queries/playlists";
 import path from "path-browserify";
+import { FileInfo, newFileInfo } from "./SongUploadModal";
 
 const DEFAULT_MUSIC_IMAGE_URL =
   "https://sun6-23.userapi.com/s/v1/ig2/fCU0l_DjmTovIKbT969SqRNxQpBkl8_l00z0vPJY-tOy2vHwd9eY7rGCloekqrGzgLvANYSf886sRaMsTBDM2Blr.jpg?size=1068x1068&quality=95&crop=4,0,1068,1068&ava=1";
 
 interface SongUploadFormProps {
-  file?: File;
+  fileInfo?: FileInfo;
   setError?: React.Dispatch<React.SetStateAction<string>>;
+  multipleFiles?: boolean;
+  handleGoBackFormEditing?: (newFileInfo: newFileInfo) => void;
+}
+
+interface UploadSongInfoProps {
+  name: string;
+  author: string;
+  album: string;
 }
 
 const SongUploadForm: React.FC<SongUploadFormProps> = observer(
-  ({ file, setError }) => {
-    const [songImage, setSongImage] = useState<ImageType>({});
+  ({ fileInfo, setError, multipleFiles, handleGoBackFormEditing }) => {
+    const [songImage, setSongImage] = useState<ImageType>(
+      fileInfo?.image_url
+        ? {
+            image_url: fileInfo?.image_url,
+          }
+        : {}
+    );
     const [isLoading, setIsLoading] = useState(false);
     const { userStore, modalsStore } = useStores();
 
+    const handleUploadSong = async (info: UploadSongInfoProps) => {
+      setIsLoading(true);
+      try {
+        const audio_url = await handleUploadAudio();
+        if (!audio_url) return;
+
+        const res = await axios.post(
+          "/songs/create",
+          {
+            name: info.name,
+            url: audio_url,
+            author: info.author,
+            album: info.album,
+            image_key: songImage.image_key,
+            image_url: songImage.image_url,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${userStore.access_token}`,
+            },
+          }
+        );
+
+        const song: SongType = res.data;
+        if (modalsStore.playlistToAddToId && song && song.id) {
+          await addSongToPlaylist(modalsStore.playlistToAddToId, song.id);
+        }
+
+        modalsStore.setSnackbarMessage("Аудио успешно загружено!");
+
+        if (multipleFiles && handleGoBackFormEditing) {
+          handleGoBackFormEditing({
+            name: song.name,
+            author: song.author,
+            uploaded: true,
+            image_url: songImage.image_url,
+            album: song.album,
+            file: fileInfo?.file,
+          });
+        } else {
+          modalsStore.toggleSongUploadModal();
+        }
+      } catch (error) {
+        if (setError) {
+          setIsLoading(false);
+          setError("Не удалось загрузить аудио!");
+        }
+        console.log(error);
+      }
+    };
+
     const songCreateFormik = useFormik({
       initialValues: {
-        name: file ? path.parse(file.name).name : "",
-        author: "",
-        album: "",
+        name: fileInfo?.name
+          ? fileInfo.name
+          : fileInfo?.file
+          ? path.parse(fileInfo.file.name).name
+          : "",
+        author: fileInfo?.author || "",
+        album: fileInfo?.album || "",
       },
       onSubmit: async (values) => {
-        setIsLoading(true);
-        try {
-          const audio_url = await handleUploadAudio();
-          if (!audio_url) return;
+        const info = {
+          name: values.name,
+          author: values.author,
+          album: values.album,
+        };
 
-          const res = await axios.post(
-            "/songs/create",
-            {
-              name: values.name,
-              url: audio_url,
-              author: values.author,
-              album: values.album,
-              image_key: songImage.image_key,
-              image_url: songImage.image_url,
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${userStore.access_token}`,
-              },
-            }
-          );
-
-          const song: SongType = res.data;
-          if (modalsStore.playlistToAddToId && song && song.id) {
-            await addSongToPlaylist(modalsStore.playlistToAddToId, song.id);
-          }
-
-          modalsStore.setSnackbarMessage("Аудио успешно загружено!");
-          modalsStore.toggleSongUploadModal();
-        } catch (error) {
-          if (setError) {
-            setIsLoading(false);
-            setError("Не удалось загрузить аудио!");
-          }
-          console.log(error);
-        }
+        handleUploadSong(info);
       },
     });
 
@@ -86,9 +127,9 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
 
     const handleUploadAudio = async () => {
       try {
-        if (!file) return;
+        if (!fileInfo || !fileInfo.file) return;
         const audioFromData = new FormData();
-        audioFromData.append("audio", file);
+        audioFromData.append("audio", fileInfo.file);
 
         const res = await axios.post("/files/audio/upload", audioFromData, {
           headers: {
@@ -206,7 +247,7 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                     marginTop="10px"
                     maxWidth="200px"
                   >
-                    {file?.name}
+                    {fileInfo?.file?.name}
                   </Typography>
                 </Stack>
               </Stack>
@@ -241,16 +282,40 @@ const SongUploadForm: React.FC<SongUploadFormProps> = observer(
                 </Stack>
               </Stack>
 
-              <Box>
-                <LoadingButton
-                  loading={isLoading}
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                >
-                  Сохранить
-                </LoadingButton>
-              </Box>
+              <Stack flexDirection="row" marginTop="10px">
+                {multipleFiles && handleGoBackFormEditing && (
+                  <Box marginRight="10px">
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        const { album, author, name } = songCreateFormik.values;
+                        handleGoBackFormEditing({
+                          author,
+                          name,
+                          uploaded: false,
+                          album,
+                          image_url: songImage.image_url,
+                          file: fileInfo?.file,
+                        });
+                      }}
+                    >
+                      Назад
+                    </Button>
+                  </Box>
+                )}
+
+                <Box>
+                  <LoadingButton
+                    loading={isLoading}
+                    variant="contained"
+                    color="primary"
+                    type="submit"
+                  >
+                    Сохранить
+                  </LoadingButton>
+                </Box>
+              </Stack>
             </form>
           </Stack>
         </Stack>

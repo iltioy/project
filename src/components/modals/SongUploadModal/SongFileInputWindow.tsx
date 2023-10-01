@@ -4,7 +4,7 @@ import { useState } from "react";
 import { observer } from "mobx-react-lite";
 
 interface SongFileInputWindowProps {
-  handleAddFile: (file: File) => void;
+  handleAddFile: (files: FileList) => void;
 }
 
 const SongFileInputWindow: React.FC<SongFileInputWindowProps> = observer(
@@ -23,11 +23,9 @@ const SongFileInputWindow: React.FC<SongFileInputWindowProps> = observer(
 
     const onDropHandler = (e: React.DragEvent<HTMLDivElement>) => {
       e.preventDefault();
-      let file = e.dataTransfer.files[0];
       setDrag(false);
-      if (!file) return;
 
-      handleAddFile(file);
+      handleAddFile(e.dataTransfer.files);
     };
     return (
       <>
@@ -65,15 +63,12 @@ const SongFileInputWindow: React.FC<SongFileInputWindowProps> = observer(
           type="file"
           id="audioFileInput"
           accept="audio/*"
+          multiple
           onClick={(e) => e.stopPropagation()}
           onChange={(e) => {
-            const files = e.target.files;
-            if (!files) return;
+            if (!e.target.files) return;
 
-            const file = files[0];
-            if (!file) return;
-
-            handleAddFile(file);
+            handleAddFile(e.target.files);
           }}
         />
       </>

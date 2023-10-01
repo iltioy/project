@@ -98,22 +98,24 @@ const EditPlaylistPage = observer(() => {
         flexDirection="column"
         bgcolor="custom.bg.main"
         overflow="auto"
+        paddingBottom="50px"
       >
         <Navbar />
 
-        <EditPlaylistHeader
-          // playlist={playlist}
-          isLoading={isLoading}
-          playlist={playlist}
-          playlistName={playlistName}
-          setPlaylistName={setPlaylistName}
-          playlistImage={playlistImage}
-          setPlaylistImage={setPlaylistImage}
-          handleSaveChanges={handleSaveChanges}
-        />
+        <Stack flexDirection="column">
+          <EditPlaylistHeader
+            // playlist={playlist}
+            isLoading={isLoading}
+            playlist={playlist}
+            playlistName={playlistName}
+            setPlaylistName={setPlaylistName}
+            playlistImage={playlistImage}
+            setPlaylistImage={setPlaylistImage}
+            handleSaveChanges={handleSaveChanges}
+          />
 
-        <PlaylistSongs isEdit data={songs} isLoading={isLoading} />
-
+          <PlaylistSongs isEdit data={songs} isLoading={isLoading} />
+        </Stack>
         {/* <Menu
         open={isPlaylistSettingOpen}
         anchorEl={playlistSettingsAnchorElement}
